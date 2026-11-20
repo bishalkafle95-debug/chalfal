@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import Peer from "simple-peer";
 import { useAuth } from "../context/AuthContext.jsx";
 
-const SOCKET_URL = "http://localhost:5001";
+const SOCKET_URL = "https://chalfal.onrender.com"; // Replace with your server URL
 
 const peerConfig = {
   initiator: false,
