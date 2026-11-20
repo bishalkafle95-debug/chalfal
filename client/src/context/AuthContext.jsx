@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext(null);
 
-export const API_BASE = "https://chalfal.onrender.com";
+export const API_BASE = "https://chalfal.onrender.com/api";
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("chalfal_token") || null);
