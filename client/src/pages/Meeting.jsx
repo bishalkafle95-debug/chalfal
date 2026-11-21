@@ -96,55 +96,65 @@ const TranslateIcon = () => (
 );
 
 const translationCache = new Map();
-const getBaseLang = (code = "") => code.toLowerCase().split("-")[0];
+const getBaseLang = (code = "en-US") => code.toLowerCase().split("-")[0];
 
-const QUESTION_STARTERS = {
-  en: /^(what|what's|where|where's|when|why|who|who's|whom|whose|which|how|how's|is|are|am|was|were|do|does|did|can|could|will|would|shall|should|have|has|had)\b/i,
-  ne: /^(के|कहाँ|कहिले|किन|को|कस्तो|कति|कसरी|कुन)/,
-  hi: /^(क्या|कहाँ|कब|क्यों|कौन|कैसा|कैसी|कैसे|कितना|कितने|किस)/,
-  es: /^(qué|dónde|cuándo|por qué|quién|cómo|cuál|cuánto)/i,
-  fr: /^(que|quoi|où|quand|pourquoi|qui|comment|quel|quelle|est-ce)/i,
-};
+// Free, zero-key translation: Google Translate GTX primary -> MyMemory automatic fallback
+async function translateWithFreeAPI(text, sourceLang, targetLang, signal) {
+  const clean = (text || "").trim();
+  const src = getBaseLang(sourceLang);
+  const tgt = getBaseLang(targetLang);
 
-const EN_CONTRACTIONS = [
-  [/\bim\b/gi, "I'm"],
-  [/\bive\b/gi, "I've"],
-  [/\bid\b/gi, "I'd"],
-  [/\bwhats\b/gi, "what's"],
-  [/\bwheres\b/gi, "where's"],
-  [/\bwhos\b/gi, "who's"],
-  [/\bhows\b/gi, "how's"],
-  [/\bdont\b/gi, "don't"],
-  [/\bdoesnt\b/gi, "doesn't"],
-  [/\bdidnt\b/gi, "didn't"],
-  [/\bcant\b/gi, "can't"],
-  [/\bwont\b/gi, "won't"],
-  [/\byoure\b/gi, "you're"],
-  [/\bthats\b/gi, "that's"],
-  [/\bwanna\b/gi, "want to"],
-  [/\bgonna\b/gi, "going to"],
-];
+  if (!clean || src === tgt) return clean;
 
-function cleanSpeechForTranslation(text, sourceLang) {
-  let clean = (text || "").replace(/\s+/g, " ").trim();
-  if (!clean) return "";
+  const cacheKey = `${src}:${tgt}:${clean.toLowerCase()}`;
+  if (translationCache.has(cacheKey)) {
+    return translationCache.get(cacheKey);
+  }
 
-  const base = getBaseLang(sourceLang);
-  const isDevanagari = base === "ne" || base === "hi";
+  // 1. Primary: Google Translate free GTX endpoint
+  try {
+    const googleUrl =
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(src)}` +
+      `&tl=${encodeURIComponent(tgt)}&dt=t&q=${encodeURIComponent(clean)}`;
 
-  if (base === "en") {
-    for (const [pattern, replacement] of EN_CONTRACTIONS) {
-      clean = clean.replace(pattern, replacement);
+    const res = await fetch(googleUrl, { signal });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data?.[0])) {
+        const translated = data[0]
+          .map((segment) => (Array.isArray(segment) ? segment[0] : ""))
+          .join("")
+          .trim();
+
+        if (translated) {
+          if (translationCache.size > 800) translationCache.clear();
+          translationCache.set(cacheKey, translated);
+          return translated;
+        }
+      }
     }
+  } catch (err) {
+    if (err?.name === "AbortError") throw err;
   }
 
-  if (!isDevanagari) {
-    clean = clean.charAt(0).toUpperCase() + clean.slice(1);
-  }
+  // 2. Fallback: MyMemory free API (if Google ever rate-limits)
+  try {
+    const myMemoryUrl =
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(clean)}` +
+      `&langpair=${encodeURIComponent(`${src}|${tgt}`)}`;
 
-  if (!/[.?!।]$/.test(clean)) {
-    const qRegex = QUESTION_STARTERS[base];
-    clean += qRegex && qRegex.test(clean) ? "?" : isDevanagari ? "।" : ".";
+    const res = await fetch(myMemoryUrl, { signal });
+    if (res.ok) {
+      const data = await res.json();
+      const translated = (data?.responseData?.translatedText || "").trim();
+      if (data?.responseStatus === 200 && translated) {
+        if (translationCache.size > 800) translationCache.clear();
+        translationCache.set(cacheKey, translated);
+        return translated;
+      }
+    }
+  } catch (err) {
+    if (err?.name === "AbortError") throw err;
   }
 
   return clean;
@@ -164,12 +174,10 @@ const MEETING_STYLES = `
   .lobby-card { background: #1a1a1a; padding: 3rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; width: 100%; max-width: 480px; text-align: center; }
   .lobby-logo { display: inline-flex; justify-content: center; color: var(--accent); margin-bottom: 1rem; }
   .lobby-title { font-size: 2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800; }
-  .lobby-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.75rem; }
-  .lobby-status-bar { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 1.5rem; font-size: 0.8rem; }
-  .status-pill { flex: 1; padding: 7px 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: #ccc; font-weight: 600; }
-  .status-pill.ok { border-color: rgba(46,204,113,0.4); color: #2ecc71; }
-  .status-pill.warn { border-color: rgba(255,183,3,0.4); color: #ffb703; }
-  .status-pill.err { border-color: rgba(230,57,70,0.5); color: #ff6b6b; }
+  .lobby-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; }
+  .lobby-status { margin-bottom: 1.5rem; padding: 8px 12px; border-radius: 8px; background: #111; border: 1px solid #333; font-size: 0.85rem; font-weight: 600; }
+  .lobby-status.ok { border-color: rgba(46,204,113,0.4); color: #2ecc71; }
+  .lobby-status.warn { border-color: rgba(255,183,3,0.4); color: #ffb703; }
   .form-group { text-align: left; margin-bottom: 2rem; }
   .form-group label { display: block; margin-bottom: 10px; color: #fff; font-size: 0.95rem; font-weight: 600; }
   .lobby-select { width: 100%; padding: 14px 16px; background: #0b192c; border: 2px solid #333; border-radius: 8px; font-size: 1rem; color: #fff; outline: none; cursor: pointer; transition: border-color 0.2s; }
@@ -181,7 +189,6 @@ const MEETING_STYLES = `
   .logo { display: flex; align-items: center; text-decoration: none; color: #fff; font-weight: bold; font-size: 1.1rem; }
   .logo-icon { margin-right: 8px; color: var(--accent); display: flex; }
   .room-code { background: var(--accent-light); color: var(--accent); padding: 6px 12px; border-radius: 50px; font-size: 0.9rem; border: none; font-weight: 700; cursor: pointer; }
-  .unlock-ai-btn { background: #ffb703; color: #111; border: none; border-radius: 20px; padding: 3px 10px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
   .meet-body { flex: 1; display: flex; overflow: hidden; }
   .video-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; padding: 1rem; overflow-y: auto; background: #000; align-content: start; }
   .video-tile { position: relative; background: #1a1a1a; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); aspect-ratio: 16/9; border: 2px solid #333; contain: layout style paint; }
@@ -191,10 +198,10 @@ const MEETING_STYLES = `
   .v-label { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.72); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
   .v-muted { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
 
-  .v-subtitle { position: absolute; bottom: 45px; left: 5%; right: 5%; text-align: center; pointer-events: none; z-index: 5; transition: opacity 0.12s ease; }
+  .v-subtitle { position: absolute; bottom: 45px; left: 5%; right: 5%; text-align: center; pointer-events: none; z-index: 5; }
   .v-subtitle span { background: rgba(0,0,0,0.88); color: #ffb703; padding: 7px 16px; border-radius: 8px; font-size: 1.08rem; font-weight: 800; text-shadow: 1px 1px 2px #000; border: 1px solid rgba(255,183,3,0.35); display: inline-block; max-width: 100%; line-height: 1.35; }
   .v-subtitle-orig { font-size: 0.78rem; color: #cfcfcf; font-weight: 400; margin-top: 3px; text-shadow: none; }
-  .v-subtitle.interim span { color: #f1f1f1; background: rgba(0,0,0,0.74); font-weight: 700; border: 1px solid rgba(255,255,255,0.22); font-size: 1rem; }
+  .v-subtitle.interim span { color: #f1f1f1; background: rgba(0,0,0,0.72); font-weight: 600; border: 1px solid rgba(255,255,255,0.22); font-size: 1rem; }
 
   .chat-panel { width: 360px; background: #111; border-left: 1px solid #333; display: flex; flex-direction: column; transition: width 0.25s ease, opacity 0.25s ease; overflow: hidden; }
   .chat-panel.hidden { width: 0; opacity: 0; border-left: none; pointer-events: none; }
@@ -223,7 +230,7 @@ function Meeting() {
 
   // --- UI State ---
   const [hasJoined, setHasJoined] = useState(false);
-  const [serverStatus, setServerStatus] = useState("waking");
+  const [serverStatus, setServerStatus] = useState("waking"); // waking | ready | connected
   const [peers, setPeers] = useState([]);
   const [muted, setMuted] = useState(false);
   const [videoOff, setVideoOff] = useState(false);
@@ -232,17 +239,10 @@ function Meeting() {
   const [messages, setMessages] = useState([]);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  // --- Translation State ---
+  // --- Translation & Subtitles State ---
   const [myLanguage, setMyLanguage] = useState("en-US");
   const [subtitles, setSubtitles] = useState({}); // { [socketId]: { translated, original, isLive } | null }
   const [myLiveCaption, setMyLiveCaption] = useState("");
-  const [modelStatus, setModelStatus] = useState("ready"); // loading | ready | error
-  const [modelProgress, setModelProgress] = useState(0);
-  const [activeEngine, setActiveEngine] = useState(
-    typeof window !== "undefined" && "Translator" in window ? "On-Device AI Ready" : "Local AI Ready"
-  );
-  const [needsNativeClick, setNeedsNativeClick] = useState(false);
-  const [modelError, setModelError] = useState("");
 
   // --- Refs ---
   const socketRef = useRef(null);
@@ -251,23 +251,14 @@ function Meeting() {
   const screenStreamRef = useRef(null);
   const peersRef = useRef([]);
   const recognitionRef = useRef(null);
-  const workerRef = useRef(null);
-
-  // Tier 1: Chrome/Edge built-in on-device Translator instances ("src->tgt" => Translator | Promise | false)
-  const nativeTranslatorsRef = useRef(new Map());
-
-  // Tier 2/3: Worker single-flight queue refs
-  const workerReadyRef = useRef(false);
-  const workerBusyRef = useRef(false);
-  const pendingJobsRef = useRef(new Map());
 
   const myLanguageRef = useRef(myLanguage);
   const mutedRef = useRef(muted);
   const lastInterimEmitRef = useRef(0);
   const lastInterimTextRef = useRef("");
   const latestSeqRef = useRef({});
+  const abortControllersRef = useRef({});
   const subtitleTimersRef = useRef({});
-  const workerPauseTimersRef = useRef({});
   const selfCaptionTimerRef = useRef(null);
 
   useEffect(() => { myLanguageRef.current = myLanguage; }, [myLanguage]);
@@ -275,8 +266,7 @@ function Meeting() {
 
   const userName = user?.fullName || "Guest";
 
-  // Unified subtitle setter: smoothly updates either live interim or final captions
-  const setPeerSubtitle = useCallback((socketId, translated, original, isLive = false) => {
+  const showPeerSubtitle = useCallback((socketId, translated, original, isLive = false) => {
     setSubtitles((prev) => ({
       ...prev,
       [socketId]: { translated, original, isLive },
@@ -290,117 +280,52 @@ function Meeting() {
     }, isLive ? 4500 : 7000);
   }, []);
 
-  // Pump next job into the fallback WASM worker (1 at a time to keep video 60fps)
-  const pumpWorkerQueue = useCallback(() => {
-    if (!workerRef.current || !workerReadyRef.current || workerBusyRef.current) return;
-    if (pendingJobsRef.current.size === 0) return;
+  // Translate incoming peer captions via free API (with stale-request cancellation & caching)
+  const translateIncomingSubtitle = useCallback(async (socketId, text, sourceLang, isInterim) => {
+    const cleanText = (text || "").trim();
+    if (!cleanText) return;
 
-    const [nextKey, job] = pendingJobsRef.current.entries().next().value;
-    pendingJobsRef.current.delete(nextKey);
+    const targetLang = myLanguageRef.current;
+    const seq = (latestSeqRef.current[socketId] || 0) + 1;
+    latestSeqRef.current[socketId] = seq;
 
-    workerBusyRef.current = true;
-    workerRef.current.postMessage({ type: "translate", ...job });
-  }, []);
-
-  // CRITICAL: Must be called SYNCHRONOUSLY inside a click/change user gesture!
-  // Pre-loads Chrome/Edge's fast on-device translation packs for all source languages -> targetLang.
-  const warmupNativeTranslators = useCallback((targetLangCode) => {
-    if (typeof window === "undefined" || !("Translator" in window)) return;
-    const tgt = getBaseLang(targetLangCode);
-
-    SUPPORTED_LANGUAGES.forEach(({ code }) => {
-      const src = getBaseLang(code);
-      if (src === tgt) return;
-
-      const key = `${src}->${tgt}`;
-      if (nativeTranslatorsRef.current.has(key)) return;
-
-      // Call Translator.create() directly (NO await beforehand) so Chrome keeps the user gesture
-      try {
-        const pending = window.Translator.create({
-          sourceLanguage: src,
-          targetLanguage: tgt,
-          monitor(m) {
-            m.addEventListener("downloadprogress", (e) => {
-              const pct = Math.min(99, Math.round((e.loaded || 0) * 100));
-              setModelStatus("loading");
-              setModelProgress(pct);
-              setActiveEngine(`Downloading ${src.toUpperCase()}→${tgt.toUpperCase()}`);
-            });
-          },
-        })
-          .then((translator) => {
-            nativeTranslatorsRef.current.set(key, translator);
-            setNeedsNativeClick(false);
-            setModelStatus("ready");
-            setModelProgress(100);
-            setActiveEngine("On-Device AI");
-            return translator;
-          })
-          .catch((err) => {
-            if (err?.name === "NotAllowedError") {
-              nativeTranslatorsRef.current.delete(key);
-              setNeedsNativeClick(true);
-            } else {
-              // Language pair truly unavailable in browser -> mark false so worker handles it
-              nativeTranslatorsRef.current.set(key, false);
-            }
-            return null;
-          });
-
-        nativeTranslatorsRef.current.set(key, pending);
-      } catch {
-        nativeTranslatorsRef.current.set(key, false);
-      }
-    });
-  }, []);
-
-  // Resolve ready Tier-1 on-device translator for a pair (instant ~20ms translate)
-  const getReadyNativeTranslator = useCallback(async (sourceLang, targetLang) => {
-    if (typeof window === "undefined" || !("Translator" in window)) return null;
-    const src = getBaseLang(sourceLang);
-    const tgt = getBaseLang(targetLang);
-    const key = `${src}->${tgt}`;
-
-    const cached = nativeTranslatorsRef.current.get(key);
-    if (cached === false) return null;
-
-    if (cached) {
-      // May be a ready instance or an in-flight creation Promise
-      const resolved = typeof cached.then === "function" ? await cached : cached;
-      return resolved || null;
+    // Cancel any older in-flight translation for this speaker so subtitles never jump backward
+    if (abortControllersRef.current[socketId]) {
+      abortControllersRef.current[socketId].abort();
     }
 
-    // Check if already downloaded on device (if "available", create() works without a click)
+    // Same base language -> instant display, zero API calls
+    if (getBaseLang(sourceLang) === getBaseLang(targetLang)) {
+      showPeerSubtitle(socketId, cleanText, cleanText, isInterim);
+      return;
+    }
+
+    const controller = new AbortController();
+    abortControllersRef.current[socketId] = controller;
+
     try {
-      const availability = await window.Translator.availability({
-        sourceLanguage: src,
-        targetLanguage: tgt,
-      });
+      const translated = await translateWithFreeAPI(
+        cleanText,
+        sourceLang,
+        targetLang,
+        controller.signal
+      );
 
-      if (availability === "available") {
-        const instance = await window.Translator.create({
-          sourceLanguage: src,
-          targetLanguage: tgt,
-        });
-        nativeTranslatorsRef.current.set(key, instance);
-        setActiveEngine("On-Device AI");
-        return instance;
+      // Only render if this is still the latest caption from this speaker
+      if (latestSeqRef.current[socketId] === seq) {
+        showPeerSubtitle(socketId, translated, cleanText, isInterim);
       }
-
-      if (availability === "downloadable" || availability === "downloading") {
-        // Needs a user click to start download — show one-click unlock pill instead of blacklisting
-        setNeedsNativeClick(true);
-        return null;
+    } catch (err) {
+      if (err?.name !== "AbortError") {
+        showPeerSubtitle(socketId, cleanText, cleanText, isInterim);
       }
-
-      nativeTranslatorsRef.current.set(key, false);
-      return null;
-    } catch {
-      nativeTranslatorsRef.current.set(key, false);
-      return null;
     }
-  }, []);
+  }, [showPeerSubtitle]);
+
+  const translateIncomingRef = useRef(translateIncomingSubtitle);
+  useEffect(() => {
+    translateIncomingRef.current = translateIncomingSubtitle;
+  }, [translateIncomingSubtitle]);
 
   // ==========================================
   // 0. Pre-warm Render Backend immediately in Lobby
@@ -414,226 +339,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // 1. Initialize Fallback Local Offline Worker
-  // ==========================================
-  useEffect(() => {
-    let worker;
-    workerReadyRef.current = false;
-    workerBusyRef.current = false;
-
-    try {
-      worker = new Worker(
-        new URL("../workers/translatorWorker.js", import.meta.url),
-        { type: "module" }
-      );
-      workerRef.current = worker;
-      worker.postMessage({ type: "init", preferredLang: myLanguageRef.current });
-
-      worker.onmessage = (event) => {
-        const {
-          status,
-          progress,
-          model,
-          engine,
-          error,
-          seq,
-          socketId,
-          sourceLang,
-          targetLang,
-          originalText,
-          translatedText,
-          isInterim,
-        } = event.data || {};
-
-        if (status === "loading") {
-          setModelStatus("loading");
-          if (typeof progress === "number") setModelProgress(Math.round(progress));
-          if (model) setActiveEngine(`Loading ${model}`);
-          return;
-        }
-
-        if (status === "ready") {
-          workerReadyRef.current = true;
-          workerBusyRef.current = false;
-          setModelStatus("ready");
-          setModelProgress(100);
-          pumpWorkerQueue();
-          return;
-        }
-
-        if (status === "error") {
-          workerBusyRef.current = false;
-          console.error("Translator worker error:", error);
-          if (!workerReadyRef.current) {
-            setModelStatus("error");
-            setModelError(error || "Model failed to load");
-          } else if (socketId && originalText) {
-            setPeerSubtitle(socketId, originalText, originalText, Boolean(isInterim));
-            pumpWorkerQueue();
-          }
-          return;
-        }
-
-        if (status === "complete") {
-          workerBusyRef.current = false;
-          workerReadyRef.current = true;
-          setModelStatus("ready");
-          if (engine) setActiveEngine(engine);
-
-          const cacheKey = `${getBaseLang(sourceLang)}:${getBaseLang(targetLang)}:${originalText.trim().toLowerCase()}`;
-          if (translationCache.size > 600) translationCache.clear();
-          translationCache.set(cacheKey, translatedText);
-
-          // Drop stale interim outputs if newer speech already arrived
-          if (!isInterim || latestSeqRef.current[socketId] === seq) {
-            setPeerSubtitle(socketId, translatedText, originalText, Boolean(isInterim));
-          }
-
-          pumpWorkerQueue();
-        }
-      };
-
-      worker.onerror = (err) => {
-        console.error("Worker crashed:", err.message || err);
-        workerReadyRef.current = false;
-        workerBusyRef.current = false;
-        setModelStatus("error");
-        setModelError(err.message || "Worker script failed to load");
-      };
-    } catch (err) {
-      console.error("Worker init error:", err);
-      setModelStatus("error");
-      setModelError(err.message);
-    }
-
-    return () => {
-      if (worker) worker.terminate();
-      workerRef.current = null;
-      workerReadyRef.current = false;
-      workerBusyRef.current = false;
-      pendingJobsRef.current.clear();
-
-      // Clean up native on-device translator instances
-      nativeTranslatorsRef.current.forEach((val) => {
-        if (val && typeof val.destroy === "function") {
-          try { val.destroy(); } catch {}
-        }
-      });
-      nativeTranslatorsRef.current.clear();
-
-      Object.values(subtitleTimersRef.current).forEach(clearTimeout);
-      Object.values(workerPauseTimersRef.current).forEach(clearTimeout);
-      if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
-    };
-  }, [pumpWorkerQueue, setPeerSubtitle]);
-
-  const queueWorkerTranslation = useCallback((socketId, seq, cleanText, sourceLang, targetLang, isInterim) => {
-    if (!workerRef.current || !workerReadyRef.current) {
-      setPeerSubtitle(socketId, cleanText, cleanText, isInterim);
-      return;
-    }
-
-    pendingJobsRef.current.set(socketId, {
-      seq,
-      socketId,
-      text: cleanText,
-      sourceLang,
-      targetLang,
-      isInterim,
-    });
-    pumpWorkerQueue();
-  }, [pumpWorkerQueue, setPeerSubtitle]);
-
-  // Core translation router: Cache -> Tier 1 Instant On-Device AI -> Tier 2/3 Worker
-  const requestLocalTranslation = useCallback(async (socketId, text, sourceLang, isInterim) => {
-    const cleanText = (text || "").trim();
-    if (!cleanText) return;
-
-    const targetLang = myLanguageRef.current;
-    const seq = (latestSeqRef.current[socketId] || 0) + 1;
-    latestSeqRef.current[socketId] = seq;
-
-    if (workerPauseTimersRef.current[socketId]) {
-      clearTimeout(workerPauseTimersRef.current[socketId]);
-    }
-
-    // 1. Same base language -> instant display, zero cost
-    if (getBaseLang(sourceLang) === getBaseLang(targetLang)) {
-      setPeerSubtitle(socketId, cleanText, cleanText, isInterim);
-      return;
-    }
-
-    // 2. Cache hit -> 0ms instant display
-    const cacheKey = `${getBaseLang(sourceLang)}:${getBaseLang(targetLang)}:${cleanText.toLowerCase()}`;
-    if (translationCache.has(cacheKey)) {
-      setPeerSubtitle(socketId, translationCache.get(cacheKey), cleanText, isInterim);
-      return;
-    }
-
-    // 3. Tier 1: Chrome/Edge On-Device AI (~20ms -> translates BOTH live interim and final smoothly!)
-    const nativeTranslator = await getReadyNativeTranslator(sourceLang, targetLang);
-    if (nativeTranslator) {
-      try {
-        const prepared = cleanSpeechForTranslation(cleanText, sourceLang);
-        const translated = (await nativeTranslator.translate(prepared)).trim();
-        if (translated) {
-          if (translationCache.size > 600) translationCache.clear();
-          translationCache.set(cacheKey, translated);
-
-          // Only render if no newer sentence superseded this one while awaiting
-          if (!isInterim || latestSeqRef.current[socketId] === seq) {
-            setModelStatus("ready");
-            setActiveEngine("On-Device AI");
-            setPeerSubtitle(socketId, translated, cleanText, isInterim);
-          }
-          return;
-        }
-      } catch (err) {
-        console.warn("Native translate fallback:", err);
-      }
-    }
-
-    // 4. Tier 2/3 Fallback (WASM Worker):
-    // For interim text, display live preview immediately AND flush to worker if speaker pauses 650ms
-    if (isInterim) {
-      setPeerSubtitle(socketId, cleanText, cleanText, true);
-      workerPauseTimersRef.current[socketId] = setTimeout(() => {
-        if (latestSeqRef.current[socketId] === seq) {
-          queueWorkerTranslation(socketId, seq, cleanText, sourceLang, targetLang, true);
-        }
-      }, 650);
-      return;
-    }
-
-    // Final sentence -> queue immediately in worker
-    queueWorkerTranslation(socketId, seq, cleanText, sourceLang, targetLang, false);
-  }, [getReadyNativeTranslator, queueWorkerTranslation, setPeerSubtitle]);
-
-  const requestTranslationRef = useRef(requestLocalTranslation);
-  useEffect(() => {
-    requestTranslationRef.current = requestLocalTranslation;
-  }, [requestLocalTranslation]);
-
-  // Synchronous user-gesture handlers for Lobby Join and In-Call Language Switch
-  const handleLobbyJoin = (e) => {
-    e.preventDefault();
-    warmupNativeTranslators(myLanguage);
-    if (getBaseLang(myLanguage) === "ne" && workerRef.current) {
-      workerRef.current.postMessage({ type: "init", preferredLang: myLanguage });
-    }
-    setHasJoined(true);
-  };
-
-  const handleLanguageChange = (nextLang) => {
-    setMyLanguage(nextLang);
-    warmupNativeTranslators(nextLang);
-    if (getBaseLang(nextLang) === "ne" && workerRef.current) {
-      workerRef.current.postMessage({ type: "init", preferredLang: nextLang });
-    }
-  };
-
-  // ==========================================
-  // 2. Speech Recognition (low-latency 250ms streaming)
+  // 1. Speech Recognition (smooth live streaming)
   // ==========================================
   useEffect(() => {
     if (!hasJoined) return;
@@ -672,11 +378,11 @@ function Meeting() {
       const trimmedInterim = interimTranscript.trim();
       const trimmedFinal = finalTranscript.trim();
 
-      // Emit smooth live updates every 250ms when speech text changes
+      // Throttle interim emits to 450ms so live translation is smooth without hitting rate limits
       if (
         trimmedInterim &&
         trimmedInterim !== lastInterimTextRef.current &&
-        now - lastInterimEmitRef.current >= 250
+        now - lastInterimEmitRef.current >= 450
       ) {
         lastInterimEmitRef.current = now;
         lastInterimTextRef.current = trimmedInterim;
@@ -732,6 +438,7 @@ function Meeting() {
     return () => {
       isStopping = true;
       if (restartTimer) clearTimeout(restartTimer);
+      if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
       try { recognition.stop(); } catch {}
       recognitionRef.current = null;
     };
@@ -749,7 +456,7 @@ function Meeting() {
   }, [muted, hasJoined]);
 
   // ==========================================
-  // 3. Core WebRTC & Socket Connection
+  // 2. Core WebRTC & Socket Connection
   // ==========================================
   useEffect(() => {
     if (!hasJoined) return;
@@ -870,9 +577,13 @@ function Meeting() {
           peersRef.current = peersRef.current.filter((p) => p.peerId !== socketId);
           setPeers([...peersRef.current]);
 
-          pendingJobsRef.current.delete(socketId);
-          if (subtitleTimersRef.current[socketId]) clearTimeout(subtitleTimersRef.current[socketId]);
-          if (workerPauseTimersRef.current[socketId]) clearTimeout(workerPauseTimersRef.current[socketId]);
+          if (abortControllersRef.current[socketId]) {
+            abortControllersRef.current[socketId].abort();
+            delete abortControllersRef.current[socketId];
+          }
+          if (subtitleTimersRef.current[socketId]) {
+            clearTimeout(subtitleTimersRef.current[socketId]);
+          }
           setSubtitles((prev) => ({ ...prev, [socketId]: null }));
         });
 
@@ -895,11 +606,11 @@ function Meeting() {
         });
 
         socket.on("receive-interim-subtitle", ({ socketId, text, sourceLang }) => {
-          requestTranslationRef.current(socketId, text, sourceLang, true);
+          translateIncomingRef.current(socketId, text, sourceLang, true);
         });
 
         socket.on("receive-subtitle", ({ socketId, text, sourceLang }) => {
-          requestTranslationRef.current(socketId, text, sourceLang, false);
+          translateIncomingRef.current(socketId, text, sourceLang, false);
         });
       })
       .catch((err) => {
@@ -918,6 +629,9 @@ function Meeting() {
       });
       peersRef.current = [];
       setPeers([]);
+      Object.values(abortControllersRef.current).forEach((c) => c.abort());
+      abortControllersRef.current = {};
+      Object.values(subtitleTimersRef.current).forEach(clearTimeout);
     };
   }, [hasJoined, roomCode, userName]);
 
@@ -1000,13 +714,6 @@ function Meeting() {
     setTimeout(() => setCopiedCode(false), 1800);
   };
 
-  const aiBadgeText =
-    modelStatus === "ready"
-      ? activeEngine
-      : modelStatus === "loading"
-      ? `${activeEngine} ${modelProgress}%`
-      : "Captions Only (AI Error)";
-
   // ==========================================
   // PRE-JOIN LOBBY UI
   // ==========================================
@@ -1026,26 +733,20 @@ function Meeting() {
             Room: <strong style={{ color: "#ffb703", fontFamily: "monospace" }}>{roomCode}</strong>
           </p>
 
-          <div className="lobby-status-bar">
-            <div className={`status-pill ${serverStatus === "waking" ? "warn" : "ok"}`}>
-              {serverStatus === "waking" ? "Waking Server..." : "Server Ready"}
-            </div>
-            <div
-              className={`status-pill ${modelStatus === "ready" ? "ok" : modelStatus === "loading" ? "warn" : "err"}`}
-              title={modelError}
-            >
-              {aiBadgeText}
-            </div>
+          <div className={`lobby-status ${serverStatus === "waking" ? "warn" : "ok"}`}>
+            {serverStatus === "waking"
+              ? "Waking Server..."
+              : "Server Ready • Instant Translation Active"}
           </div>
 
-          <form onSubmit={handleLobbyJoin}>
+          <form onSubmit={(e) => { e.preventDefault(); setHasJoined(true); }}>
             <div className="form-group">
               <label>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
                   <TranslateIcon /> Select your language
                 </div>
                 <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: "normal" }}>
-                  Activates instant on-device AI when you click Join (zero external APIs).
+                  Fast real-time subtitle translation with zero model downloads.
                 </span>
               </label>
               <select
@@ -1093,7 +794,7 @@ function Meeting() {
           <TranslateIcon />
           <select
             value={myLanguage}
-            onChange={(e) => handleLanguageChange(e.target.value)}
+            onChange={(e) => setMyLanguage(e.target.value)}
             style={{
               background: "transparent",
               color: "#fff",
@@ -1110,39 +811,17 @@ function Meeting() {
           </select>
 
           <span
-            title={modelError}
             style={{
               fontSize: "0.75rem",
               padding: "2px 8px",
               borderRadius: "20px",
-              background:
-                modelStatus === "ready"
-                  ? "rgba(46, 204, 113, 0.2)"
-                  : modelStatus === "loading"
-                  ? "rgba(255, 183, 3, 0.2)"
-                  : "rgba(230, 57, 70, 0.25)",
-              color:
-                modelStatus === "ready"
-                  ? "#2ecc71"
-                  : modelStatus === "loading"
-                  ? "#ffb703"
-                  : "#ff6b6b",
+              background: serverStatus === "connected" ? "rgba(46, 204, 113, 0.2)" : "rgba(255, 183, 3, 0.2)",
+              color: serverStatus === "connected" ? "#2ecc71" : "#ffb703",
               fontWeight: 600,
             }}
           >
-            {aiBadgeText}
+            {serverStatus === "connected" ? "Live Translation" : "Connecting..."}
           </span>
-
-          {needsNativeClick && (
-            <button
-              type="button"
-              className="unlock-ai-btn"
-              onClick={() => warmupNativeTranslators(myLanguage)}
-              title="Click once to download Chrome's fast on-device translation pack"
-            >
-              Enable Fast AI
-            </button>
-          )}
         </div>
 
         <button className="room-code" onClick={handleCopyRoom} title="Click to copy">
