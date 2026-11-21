@@ -18,6 +18,7 @@ const BASE_PEER_CONFIG = {
   },
 };
 
+// Balanced video resolution so WebRTC encoding doesn't choke local AI inference
 const MEDIA_CONSTRAINTS = {
   video: {
     width: { ideal: 640, max: 1280 },
@@ -40,20 +41,66 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 // --- Icons ---
-const MicOnIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>;
-const MicOffIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="1" y1="1" x2="23" y2="23" /><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" /><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>;
-const CamOnIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>;
-const CamOffIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" /><line x1="1" y1="1" x2="23" y2="23" /></svg>;
-const ScreenIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><path d="M8 21h8M12 17v4" /></svg>;
-const ChatIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>;
-const EndIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" /></svg>;
-const TranslateIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 8l6 6" /><path d="M4 14l6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="M22 22l-5-10-5 10" /><path d="M14 18h6" /></svg>;
+const MicOnIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+    <line x1="12" y1="19" x2="12" y2="23" />
+    <line x1="8" y1="23" x2="16" y2="23" />
+  </svg>
+);
+const MicOffIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="1" y1="1" x2="23" y2="23" />
+    <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+    <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
+    <line x1="12" y1="19" x2="12" y2="23" />
+    <line x1="8" y1="23" x2="16" y2="23" />
+  </svg>
+);
+const CamOnIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polygon points="23 7 16 12 23 17 23 7" />
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+  </svg>
+);
+const CamOffIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" />
+    <line x1="1" y1="1" x2="23" y2="23" />
+  </svg>
+);
+const ScreenIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+    <path d="M8 21h8M12 17v4" />
+  </svg>
+);
+const ChatIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
+const EndIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+  </svg>
+);
+const TranslateIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M5 8l6 6" />
+    <path d="M4 14l6-6 2-3" />
+    <path d="M2 5h12" />
+    <path d="M7 2h1" />
+    <path d="M22 22l-5-10-5 10" />
+    <path d="M14 18h6" />
+  </svg>
+);
 
 const translationCache = new Map();
-
 const getBaseLang = (code = "") => code.toLowerCase().split("-")[0];
 
-// Static styles defined once (prevents re-parsing CSS on every state update)
+// Defined outside component so React doesn't re-parse CSS on every state change
 const MEETING_STYLES = `
   :root {
     --bg-light: #0b192c;
@@ -64,12 +111,14 @@ const MEETING_STYLES = `
   }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
   .page-wrapper { min-height: 100vh; background-color: var(--bg-light); display: flex; flex-direction: column; color: var(--text-main); }
+
+  /* Lobby */
   .lobby-card { background: #1a1a1a; padding: 3rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; width: 100%; max-width: 480px; text-align: center; }
   .lobby-logo { display: inline-flex; justify-content: center; color: var(--accent); margin-bottom: 1rem; }
   .lobby-title { font-size: 2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800; }
-  .lobby-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; }
+  .lobby-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.75rem; }
   .lobby-status-bar { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 1.5rem; font-size: 0.8rem; }
-  .status-pill { flex: 1; padding: 6px 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: #ccc; }
+  .status-pill { flex: 1; padding: 7px 10px; border-radius: 8px; background: #111; border: 1px solid #333; color: #ccc; font-weight: 600; }
   .status-pill.ok { border-color: rgba(46,204,113,0.4); color: #2ecc71; }
   .status-pill.warn { border-color: rgba(255,183,3,0.4); color: #ffb703; }
   .status-pill.err { border-color: rgba(230,57,70,0.5); color: #ff6b6b; }
@@ -80,6 +129,7 @@ const MEETING_STYLES = `
   .btn-join { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.2s; }
   .btn-join:hover { background: #c1121f; transform: translateY(-2px); }
 
+  /* Active Meeting */
   .meet-topbar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 5%; background: #1a1a1a; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
   .logo { display: flex; align-items: center; text-decoration: none; color: #fff; font-weight: bold; font-size: 1.1rem; }
   .logo-icon { margin-right: 8px; color: var(--accent); display: flex; }
@@ -92,10 +142,14 @@ const MEETING_STYLES = `
   .video-tile.video-off video { opacity: 0; }
   .v-label { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.72); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
   .v-muted { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
+
+  /* High-Visibility Subtitles */
   .v-subtitle { position: absolute; bottom: 45px; left: 5%; right: 5%; text-align: center; pointer-events: none; z-index: 5; }
-  .v-subtitle span { background: rgba(0,0,0,0.88); color: #ffb703; padding: 6px 16px; border-radius: 8px; font-size: 1.05rem; font-weight: 800; text-shadow: 1px 1px 2px #000; border: 1px solid rgba(255,183,3,0.35); display: inline-block; max-width: 100%; }
+  .v-subtitle span { background: rgba(0,0,0,0.88); color: #ffb703; padding: 7px 16px; border-radius: 8px; font-size: 1.05rem; font-weight: 800; text-shadow: 1px 1px 2px #000; border: 1px solid rgba(255,183,3,0.35); display: inline-block; max-width: 100%; line-height: 1.35; }
+  .v-subtitle-orig { font-size: 0.78rem; color: #cfcfcf; font-weight: 400; margin-top: 3px; text-shadow: none; }
   .v-subtitle.interim span { color: #e5e5e5; background: rgba(0,0,0,0.65); font-weight: 600; border: 1px solid #666; font-size: 0.95rem; }
 
+  /* Chat */
   .chat-panel { width: 360px; background: #111; border-left: 1px solid #333; display: flex; flex-direction: column; transition: width 0.25s ease, opacity 0.25s ease; overflow: hidden; }
   .chat-panel.hidden { width: 0; opacity: 0; border-left: none; pointer-events: none; }
   .chat-panel-header { padding: 1.1rem; border-bottom: 1px solid #333; color: #fff; font-weight: 700; font-size: 1.05rem; }
@@ -106,6 +160,8 @@ const MEETING_STYLES = `
   .chat-input-row { padding: 0.9rem; border-top: 1px solid #333; display: flex; gap: 10px; background: #111; }
   .chat-input-row input { flex: 1; padding: 11px 14px; border: 1px solid #444; border-radius: 8px; background: #222; color: #fff; outline: none; }
   .chat-input-row button { padding: 0 18px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+  /* Toolbar */
   .meet-toolbar { display: flex; justify-content: center; gap: 15px; padding: 0.9rem; background: #1a1a1a; border-top: 1px solid #333; position: sticky; bottom: 0; }
   .tb-btn { width: 52px; height: 52px; background: #333; color: #fff; border: 2px solid transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, transform 0.2s; }
   .tb-btn:hover { background: #444; transform: translateY(-2px); }
@@ -133,8 +189,8 @@ function Meeting() {
 
   // --- Local AI Translation State ---
   const [myLanguage, setMyLanguage] = useState("en-US");
-  const [subtitles, setSubtitles] = useState({});
-  const [interimSubtitles, setInterimSubtitles] = useState({});
+  const [subtitles, setSubtitles] = useState({}); // { [socketId]: { translated, original } | null }
+  const [interimSubtitles, setInterimSubtitles] = useState({}); // { [socketId]: string }
   const [myLiveCaption, setMyLiveCaption] = useState("");
   const [modelStatus, setModelStatus] = useState("loading"); // loading | ready | error
   const [modelProgress, setModelProgress] = useState(0);
@@ -149,16 +205,17 @@ function Meeting() {
   const recognitionRef = useRef(null);
   const workerRef = useRef(null);
 
-  // Single-flight queue refs (prevents flooding WASM worker)
+  // Single-flight queue refs (prevents CPU overload)
   const workerReadyRef = useRef(false);
   const workerBusyRef = useRef(false);
-  const pendingJobsRef = useRef(new Map()); // key: socketId -> latest job
+  const pendingJobsRef = useRef(new Map());
 
   const myLanguageRef = useRef(myLanguage);
   const mutedRef = useRef(muted);
   const lastInterimEmitRef = useRef(0);
   const latestSeqRef = useRef({});
   const subtitleTimersRef = useRef({});
+  const interimTimersRef = useRef({});
   const selfCaptionTimerRef = useRef(null);
 
   useEffect(() => { myLanguageRef.current = myLanguage; }, [myLanguage]);
@@ -166,36 +223,42 @@ function Meeting() {
 
   const userName = user?.fullName || "Guest";
 
-  // Helper to show a final subtitle and clear it after 6s
-  const showFinalSubtitle = useCallback((socketId, text) => {
+  // Show finalized subtitle + original text, auto-clear after 7s
+  const showFinalSubtitle = useCallback((socketId, translated, original) => {
+    if (interimTimersRef.current[socketId]) {
+      clearTimeout(interimTimersRef.current[socketId]);
+    }
     setInterimSubtitles((prev) => (prev[socketId] ? { ...prev, [socketId]: "" } : prev));
-    setSubtitles((prev) => ({ ...prev, [socketId]: text }));
+    setSubtitles((prev) => ({
+      ...prev,
+      [socketId]: { translated, original },
+    }));
 
     if (subtitleTimersRef.current[socketId]) {
       clearTimeout(subtitleTimersRef.current[socketId]);
     }
     subtitleTimersRef.current[socketId] = setTimeout(() => {
-      setSubtitles((prev) => ({ ...prev, [socketId]: "" }));
-    }, 6000);
+      setSubtitles((prev) => ({ ...prev, [socketId]: null }));
+    }, 7000);
   }, []);
 
-  // Pump the next highest-priority pending translation into the worker
+  // Show raw interim caption while speaker is mid-sentence, auto-clear if they stop
+  const showInterimSubtitle = useCallback((socketId, text) => {
+    setInterimSubtitles((prev) => ({ ...prev, [socketId]: text }));
+    if (interimTimersRef.current[socketId]) {
+      clearTimeout(interimTimersRef.current[socketId]);
+    }
+    interimTimersRef.current[socketId] = setTimeout(() => {
+      setInterimSubtitles((prev) => ({ ...prev, [socketId]: "" }));
+    }, 4000);
+  }, []);
+
+  // Pump next finalized translation job into the worker (1 at a time)
   const pumpWorkerQueue = useCallback(() => {
     if (!workerRef.current || !workerReadyRef.current || workerBusyRef.current) return;
     if (pendingJobsRef.current.size === 0) return;
 
-    // Prioritize finalized sentences over interim fragments
-    let nextKey = null;
-    for (const [key, job] of pendingJobsRef.current.entries()) {
-      if (!job.isInterim) {
-        nextKey = key;
-        break;
-      }
-      if (nextKey === null) nextKey = key;
-    }
-
-    if (!nextKey) return;
-    const job = pendingJobsRef.current.get(nextKey);
+    const [nextKey, job] = pendingJobsRef.current.entries().next().value;
     pendingJobsRef.current.delete(nextKey);
 
     workerBusyRef.current = true;
@@ -221,7 +284,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // 1. Pre-load Local AI Worker on Mount (starts in Lobby!)
+  // 1. Pre-load Local Offline Translation Worker on Mount
   // ==========================================
   useEffect(() => {
     let worker;
@@ -241,12 +304,10 @@ function Meeting() {
           status,
           progress,
           error,
-          seq,
           socketId,
           sourceLang,
           targetLang,
           originalText,
-          isInterim,
           translatedText,
         } = event.data || {};
 
@@ -268,17 +329,13 @@ function Meeting() {
         if (status === "error") {
           workerBusyRef.current = false;
           console.error("Translator worker error:", error);
-          // Only mark whole model broken if it wasn't ready yet
+
           if (!workerReadyRef.current) {
             setModelStatus("error");
             setModelError(error || "Model failed to load");
           } else if (socketId && originalText) {
-            // Fallback to original text on single-sentence failure
-            if (isInterim) {
-              setInterimSubtitles((prev) => ({ ...prev, [socketId]: originalText }));
-            } else {
-              showFinalSubtitle(socketId, originalText);
-            }
+            // Graceful fallback to original text if one sentence fails
+            showFinalSubtitle(socketId, originalText, originalText);
             pumpWorkerQueue();
           }
           return;
@@ -293,15 +350,7 @@ function Meeting() {
           if (translationCache.size > 500) translationCache.clear();
           translationCache.set(cacheKey, translatedText);
 
-          // Discard stale interim output if newer text already arrived
-          if (!isInterim || latestSeqRef.current[socketId] === seq) {
-            if (isInterim) {
-              setInterimSubtitles((prev) => ({ ...prev, [socketId]: translatedText }));
-            } else {
-              showFinalSubtitle(socketId, translatedText);
-            }
-          }
-
+          showFinalSubtitle(socketId, translatedText, originalText);
           pumpWorkerQueue();
         }
       };
@@ -326,6 +375,7 @@ function Meeting() {
       workerBusyRef.current = false;
       pendingJobsRef.current.clear();
       Object.values(subtitleTimersRef.current).forEach(clearTimeout);
+      Object.values(interimTimersRef.current).forEach(clearTimeout);
       if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
     };
   }, [pumpWorkerQueue, showFinalSubtitle]);
@@ -338,60 +388,46 @@ function Meeting() {
     const seq = (latestSeqRef.current[socketId] || 0) + 1;
     latestSeqRef.current[socketId] = seq;
 
-    // 1. Same base language -> instant display, zero AI cost
-    if (getBaseLang(sourceLang) === getBaseLang(targetLang)) {
-      if (isInterim) {
-        setInterimSubtitles((prev) => ({ ...prev, [socketId]: cleanText }));
-      } else {
-        showFinalSubtitle(socketId, cleanText);
-      }
+    // 1. Interim fragments: show live preview immediately without running heavy beam search
+    if (isInterim) {
+      showInterimSubtitle(socketId, cleanText);
       return;
     }
 
-    // 2. Cache hit -> instant display
+    // 2. Same base language -> display immediately, zero AI cost
+    if (getBaseLang(sourceLang) === getBaseLang(targetLang)) {
+      showFinalSubtitle(socketId, cleanText, cleanText);
+      return;
+    }
+
+    // 3. Cache hit -> instant display
     const cacheKey = `${getBaseLang(sourceLang)}:${getBaseLang(targetLang)}:${cleanText.toLowerCase()}`;
     if (translationCache.has(cacheKey)) {
-      const cached = translationCache.get(cacheKey);
-      if (isInterim) {
-        setInterimSubtitles((prev) => ({ ...prev, [socketId]: cached }));
-      } else {
-        showFinalSubtitle(socketId, cached);
-      }
+      showFinalSubtitle(socketId, translationCache.get(cacheKey), cleanText);
       return;
     }
 
-    // 3. If worker isn't ready yet, show original caption as graceful fallback
+    // 4. Worker not ready yet -> fallback to original text so captions still work
     if (!workerRef.current || !workerReadyRef.current) {
-      if (isInterim) {
-        setInterimSubtitles((prev) => ({ ...prev, [socketId]: cleanText }));
-      } else {
-        showFinalSubtitle(socketId, cleanText);
-      }
+      showFinalSubtitle(socketId, cleanText, cleanText);
       return;
     }
 
-    // 4. Keep video smooth: never overwrite a pending FINAL sentence with an INTERIM one
-    const existingPending = pendingJobsRef.current.get(socketId);
-    if (isInterim && existingPending && !existingPending.isInterim) {
-      return;
-    }
+    // 5. Show live raw text immediately while beam-search translation computes
+    showInterimSubtitle(socketId, `${cleanText} ...`);
 
-    // Show interim original text faintly while waiting for final translation if busy
-    if (isInterim && workerBusyRef.current) {
-      return;
-    }
-
+    // Keep only the newest pending finalized sentence per speaker so lag never snowballs
     pendingJobsRef.current.set(socketId, {
       seq,
       socketId,
       text: cleanText,
       sourceLang,
       targetLang,
-      isInterim,
+      isInterim: false,
     });
 
     pumpWorkerQueue();
-  }, [pumpWorkerQueue, showFinalSubtitle]);
+  }, [pumpWorkerQueue, showFinalSubtitle, showInterimSubtitle]);
 
   const requestTranslationRef = useRef(requestLocalTranslation);
   useEffect(() => {
@@ -399,14 +435,14 @@ function Meeting() {
   }, [requestLocalTranslation]);
 
   // ==========================================
-  // 2. Speech Recognition (throttled & crash-safe)
+  // 2. Speech Recognition
   // ==========================================
   useEffect(() => {
     if (!hasJoined) return;
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      console.warn("Web Speech API not supported in this browser.");
+      console.warn("Web Speech API is not supported in this browser.");
       return;
     }
 
@@ -437,8 +473,8 @@ function Meeting() {
       const trimmedInterim = interimTranscript.trim();
       const trimmedFinal = finalTranscript.trim();
 
-      // Throttle interim emits to every 1100ms so WASM translation stays smooth
-      if (trimmedInterim && now - lastInterimEmitRef.current >= 1100) {
+      // Throttle interim previews to keep socket traffic light
+      if (trimmedInterim && now - lastInterimEmitRef.current >= 900) {
         lastInterimEmitRef.current = now;
         setMyLiveCaption(trimmedInterim);
         socketRef.current.emit("send-interim-subtitle", {
@@ -452,7 +488,7 @@ function Meeting() {
       if (trimmedFinal) {
         setMyLiveCaption(trimmedFinal);
         if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
-        selfCaptionTimerRef.current = setTimeout(() => setMyLiveCaption(""), 4000);
+        selfCaptionTimerRef.current = setTimeout(() => setMyLiveCaption(""), 4500);
 
         socketRef.current.emit("send-subtitle", {
           roomCode,
@@ -474,7 +510,6 @@ function Meeting() {
 
     recognition.onend = () => {
       if (!isStopping && !fatalError && !mutedRef.current) {
-        // 400ms delay prevents tight CPU-freezing restart loops
         restartTimer = setTimeout(() => {
           if (!isStopping && !mutedRef.current) {
             try { recognition.start(); } catch (_) {}
@@ -496,11 +531,12 @@ function Meeting() {
     };
   }, [hasJoined, myLanguage, roomCode, userName]);
 
-  // Pause/resume recognition cleanly when toggling mute
+  // Pause/resume SpeechRecognition cleanly when toggling mute
   useEffect(() => {
     const rec = recognitionRef.current;
     if (!rec || !hasJoined) return;
     if (muted) {
+      setMyLiveCaption("");
       try { rec.stop(); } catch (_) {}
     } else {
       try { rec.start(); } catch (_) {}
@@ -548,7 +584,6 @@ function Meeting() {
         activeSocket = socket;
         socketRef.current = socket;
 
-        // Join room cleanly on connect (also handles Render cold starts & reconnects)
         socket.on("connect", () => {
           setServerStatus("connected");
           socket.emit("join-room", { roomCode, name: userName });
@@ -629,7 +664,12 @@ function Meeting() {
           if (item && !item.peer.destroyed) item.peer.destroy();
           peersRef.current = peersRef.current.filter((p) => p.peerId !== socketId);
           setPeers([...peersRef.current]);
+
           pendingJobsRef.current.delete(socketId);
+          if (subtitleTimersRef.current[socketId]) clearTimeout(subtitleTimersRef.current[socketId]);
+          if (interimTimersRef.current[socketId]) clearTimeout(interimTimersRef.current[socketId]);
+          setSubtitles((prev) => ({ ...prev, [socketId]: null }));
+          setInterimSubtitles((prev) => ({ ...prev, [socketId]: "" }));
         });
 
         socket.on("chat-message", (msg) => {
@@ -786,7 +826,10 @@ function Meeting() {
             <div className={`status-pill ${serverStatus === "waking" ? "warn" : "ok"}`}>
               {serverStatus === "waking" ? "Waking Server..." : "Server Ready"}
             </div>
-            <div className={`status-pill ${modelStatus === "ready" ? "ok" : modelStatus === "loading" ? "warn" : "err"}`} title={modelError}>
+            <div
+              className={`status-pill ${modelStatus === "ready" ? "ok" : modelStatus === "loading" ? "warn" : "err"}`}
+              title={modelError}
+            >
               {aiBadgeText}
             </div>
           </div>
@@ -798,10 +841,15 @@ function Meeting() {
                   <TranslateIcon /> Select your language
                 </div>
                 <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: "normal" }}>
-                  Pre-loading offline AI model in background.
+                  Offline AI model pre-loads automatically in the background.
                 </span>
               </label>
-              <select className="lobby-select" required value={myLanguage} onChange={(e) => setMyLanguage(e.target.value)}>
+              <select
+                className="lobby-select"
+                required
+                value={myLanguage}
+                onChange={(e) => setMyLanguage(e.target.value)}
+              >
                 {SUPPORTED_LANGUAGES.map((l) => (
                   <option key={l.code} value={l.code}>{l.name}</option>
                 ))}
@@ -842,7 +890,15 @@ function Meeting() {
           <select
             value={myLanguage}
             onChange={(e) => setMyLanguage(e.target.value)}
-            style={{ background: "transparent", color: "#fff", border: "none", fontWeight: "bold", fontSize: "0.85rem", outline: "none", cursor: "pointer" }}
+            style={{
+              background: "transparent",
+              color: "#fff",
+              border: "none",
+              fontWeight: "bold",
+              fontSize: "0.85rem",
+              outline: "none",
+              cursor: "pointer",
+            }}
           >
             {SUPPORTED_LANGUAGES.map((l) => (
               <option key={l.code} value={l.code} style={{ background: "#1a1a1a" }}>{l.name}</option>
@@ -854,8 +910,18 @@ function Meeting() {
               fontSize: "0.75rem",
               padding: "2px 8px",
               borderRadius: "20px",
-              background: modelStatus === "ready" ? "rgba(46, 204, 113, 0.2)" : modelStatus === "loading" ? "rgba(255, 183, 3, 0.2)" : "rgba(230, 57, 70, 0.25)",
-              color: modelStatus === "ready" ? "#2ecc71" : modelStatus === "loading" ? "#ffb703" : "#ff6b6b",
+              background:
+                modelStatus === "ready"
+                  ? "rgba(46, 204, 113, 0.2)"
+                  : modelStatus === "loading"
+                  ? "rgba(255, 183, 3, 0.2)"
+                  : "rgba(230, 57, 70, 0.25)",
+              color:
+                modelStatus === "ready"
+                  ? "#2ecc71"
+                  : modelStatus === "loading"
+                  ? "#ffb703"
+                  : "#ff6b6b",
               fontWeight: 600,
             }}
           >
@@ -889,8 +955,8 @@ function Meeting() {
               name={p.name}
               muted={p.muted}
               videoOff={p.videoOff}
-              finalSubtitleText={subtitles[p.peerId]}
-              interimSubtitleText={interimSubtitles[p.peerId]}
+              finalSubtitle={subtitles[p.peerId]}
+              interimSubtitle={interimSubtitles[p.peerId]}
             />
           ))}
         </div>
@@ -899,18 +965,28 @@ function Meeting() {
       </div>
 
       <div className="meet-toolbar">
-        <button className={`tb-btn${muted ? " off" : " active"}`} onClick={toggleMute} title={muted ? "Unmute" : "Mute"}>{muted ? <MicOffIcon /> : <MicOnIcon />}</button>
-        <button className={`tb-btn${videoOff ? " off" : " active"}`} onClick={toggleVideo} title={videoOff ? "Turn Camera On" : "Turn Camera Off"}>{videoOff ? <CamOffIcon /> : <CamOnIcon />}</button>
-        <button className={`tb-btn${screenSharing ? " off" : " active"}`} onClick={toggleScreenShare} title="Share Screen"><ScreenIcon /></button>
-        <button className={`tb-btn${chatOpen ? " active" : ""}`} onClick={() => setChatOpen((o) => !o)} title="Chat"><ChatIcon /></button>
-        <button className="tb-btn end" onClick={handleEndCall} title="Leave Call"><EndIcon /></button>
+        <button className={`tb-btn${muted ? " off" : " active"}`} onClick={toggleMute} title={muted ? "Unmute" : "Mute"}>
+          {muted ? <MicOffIcon /> : <MicOnIcon />}
+        </button>
+        <button className={`tb-btn${videoOff ? " off" : " active"}`} onClick={toggleVideo} title={videoOff ? "Turn Camera On" : "Turn Camera Off"}>
+          {videoOff ? <CamOffIcon /> : <CamOnIcon />}
+        </button>
+        <button className={`tb-btn${screenSharing ? " off" : " active"}`} onClick={toggleScreenShare} title="Share Screen">
+          <ScreenIcon />
+        </button>
+        <button className={`tb-btn${chatOpen ? " active" : ""}`} onClick={() => setChatOpen((o) => !o)} title="Chat">
+          <ChatIcon />
+        </button>
+        <button className="tb-btn end" onClick={handleEndCall} title="Leave Call">
+          <EndIcon />
+        </button>
       </div>
     </div>
   );
 }
 
-// Memoized so chat typing & other peers' subtitles don't re-render this video element
-const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff, finalSubtitleText, interimSubtitleText }) {
+// Memoized so chat input & other peers' updates don't re-render this video element
+const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff, finalSubtitle, interimSubtitle }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -927,20 +1003,25 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
       <span className="v-label">{name}</span>
       {muted && <span className="v-muted"><MicOffIcon /></span>}
 
-      {finalSubtitleText ? (
+      {finalSubtitle?.translated ? (
         <div className="v-subtitle">
-          <span>{finalSubtitleText}</span>
+          <span>
+            {finalSubtitle.translated}
+            {finalSubtitle.original && finalSubtitle.original !== finalSubtitle.translated && (
+              <div className="v-subtitle-orig">{finalSubtitle.original}</div>
+            )}
+          </span>
         </div>
-      ) : interimSubtitleText ? (
+      ) : interimSubtitle ? (
         <div className="v-subtitle interim">
-          <span>{interimSubtitleText}</span>
+          <span>{interimSubtitle}</span>
         </div>
       ) : null}
     </div>
   );
 });
 
-// Isolated chat state so typing never re-renders the video grid
+// Isolated chat state so typing never re-renders the video tiles
 const ChatPanel = memo(function ChatPanel({ open, messages, onSend }) {
   const [input, setInput] = useState("");
   const chatEndRef = useRef(null);

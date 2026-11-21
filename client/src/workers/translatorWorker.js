@@ -1,39 +1,9 @@
-import { pipeline, env } from "@huggingface/transformers";
+import { pipeline, env } from "@xenova/transformers";
 
 env.allowLocalModels = false;
+env.allowRemoteModels = true;
 env.useBrowserCache = true;
-
-// Lightweight ~35MB models per language pair (fast browser loading, zero external APIs)
-const PAIR_MODELS = {
-  "en-es": "Xenova/opus-mt-en-es",
-  "es-en": "Xenova/opus-mt-es-en",
-  "en-fr": "Xenova/opus-mt-en-fr",
-  "fr-en": "Xenova/opus-mt-fr-en",
-  "en-hi": "Xenova/opus-mt-en-hi",
-  "hi-en": "Xenova/opus-mt-hi-en",
-  "en-ne": "Xenova/opus-mt-en-mul", // Multilingual target (supports Nepali)
-  "ne-en": "Xenova/opus-mt-mul-en", // Multilingual source (supports Nepali)
-};
-
-const loadedPipelines = new Map();
-
-async function getTranslator(srcCode, tgtCode, progressCallback) {
-  const src = srcCode.split("-")[0];
-  const tgt = tgtCode.split("-")[0];
-  const pairKey = `${src}-${tgt}`;
-
-  // Fallback to NLLB-200 only for non-English-to-non-English pairs (e.g., Nepali <-> Hindi)
-  const modelName = PAIR_MODELS[pairKey] || "Xenova/nllb-200-distilled-600M";
-
-  if (!loadedPipelines.has(modelName)) {
-    const pipe = await pipeline("translation", modelName, {
-      dtype: "q8",
-      progress_callback: progressCallback,
-    });
-    loadedPipelines.set(modelName, pipe);
-  }
-  return { pipe: loadedPipelines.get(modelName), modelName, src, tgt };
-}
+env.backends.onnx.wasm.numThreads = 1;
 
 const NLLB_LANG_MAP = {
   en: "eng_Latn",
@@ -43,54 +13,112 @@ const NLLB_LANG_MAP = {
   fr: "fra_Latn",
 };
 
-self.addEventListener("message", async (event) => {
-  const { type, seq, socketId, text, sourceLang, targetLang, isInterim } = event.data;
+const QUESTION_STARTERS = {
+  en: /^(what|where|when|why|who|whom|whose|which|how|is|are|am|was|were|do|does|did|can|could|will|would|shall|should|have|has|had)\b/i,
+  ne: /^(के|कहाँ|कहिले|किन|को|कस्तो|कति|कसरी|कुन)/,
+  hi: /^(क्या|कहाँ|कब|क्यों|कौन|कैसा|कैसी|कैसे|कितना|कितने|किस)/,
+  es: /^(qué|dónde|cuándo|por qué|quién|cómo|cuál|cuánto)/i,
+  fr: /^(que|quoi|où|quand|pourquoi|qui|comment|quel|quelle|est-ce)/i,
+};
+
+const getBaseLang = (code = "en-US") => code.toLowerCase().split("-")[0];
+const toNllbCode = (code = "en-US") => NLLB_LANG_MAP[getBaseLang(code)] || "eng_Latn";
+
+// NLLB-200 accuracy jumps noticeably when raw speech is properly punctuated
+function normalizeSpeechInput(text, sourceLang) {
+  let clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) return "";
+
+  const base = getBaseLang(sourceLang);
+  const isDevanagari = base === "ne" || base === "hi";
+
+  // Capitalize first letter for Latin scripts
+  if (!isDevanagari) {
+    clean = clean.charAt(0).toUpperCase() + clean.slice(1);
+  }
+
+  // Add ending punctuation if Web Speech API omitted it
+  if (!/[.?!।]$/.test(clean)) {
+    const qRegex = QUESTION_STARTERS[base];
+    if (qRegex && qRegex.test(clean)) {
+      clean += "?";
+    } else {
+      clean += isDevanagari ? "।" : ".";
+    }
+  }
+
+  return clean;
+}
+
+let translatorPromise = null;
+
+async function getTranslator() {
+  if (!translatorPromise) {
+    translatorPromise = pipeline("translation", "Xenova/nllb-200-distilled-600M", {
+      quantized: true, // Uses stable q8 WASM weights
+      progress_callback: (data) => {
+        if (data.status === "progress" && typeof data.progress === "number") {
+          self.postMessage({ status: "loading", progress: Math.round(data.progress) });
+        }
+      },
+    });
+  }
+  return translatorPromise;
+}
+
+self.onmessage = async (event) => {
+  const { type, seq, socketId, text, sourceLang, targetLang, isInterim } = event.data || {};
 
   if (type === "init") {
-    self.postMessage({ status: "ready" });
+    try {
+      self.postMessage({ status: "loading", progress: 1 });
+      await getTranslator();
+      self.postMessage({ status: "ready" });
+    } catch (err) {
+      translatorPromise = null;
+      self.postMessage({ status: "error", error: err?.message || String(err) });
+    }
     return;
   }
 
-  try {
-    const { pipe, modelName, src, tgt } = await getTranslator(sourceLang, targetLang, (x) => {
-      if (x.status === "progress") {
-        self.postMessage({ status: "loading", progress: Math.round(x.progress || 0) });
-      }
-    });
+  if (type === "translate") {
+    try {
+      const translator = await getTranslator();
+      const preparedText = normalizeSpeechInput(text, sourceLang);
+      if (!preparedText) return;
 
-    let output;
-    if (modelName === "Xenova/nllb-200-distilled-600M") {
-      output = await pipe(text, {
-        src_lang: NLLB_LANG_MAP[src] || "eng_Latn",
-        tgt_lang: NLLB_LANG_MAP[tgt] || "eng_Latn",
+      const output = await translator(preparedText, {
+        src_lang: toNllbCode(sourceLang),
+        tgt_lang: toNllbCode(targetLang),
+        num_beams: 4,             // Change to 3 if you want slightly faster speed
+        length_penalty: 1.0,
+        no_repeat_ngram_size: 3,  // Stops repeating word loops
+        repetition_penalty: 1.15,
+        early_stopping: true,
         max_new_tokens: 128,
       });
-    } else {
-      // opus-mt-en-mul expects >>nep<< prefix for Nepali
-      const inputText = modelName === "Xenova/opus-mt-en-mul" && tgt === "ne"
-        ? `>>nep<< ${text}`
-        : text;
-      output = await pipe(inputText, { max_new_tokens: 128 });
-    }
 
-    self.postMessage({
-      status: "complete",
-      seq,
-      socketId,
-      sourceLang,
-      targetLang,
-      originalText: text,
-      isInterim,
-      translatedText: output[0].translation_text,
-    });
-  } catch (err) {
-    console.error("Worker translation error:", err);
-    self.postMessage({
-      status: "error",
-      seq,
-      socketId,
-      isInterim,
-      error: err.message,
-    });
+      const translatedText = (output?.[0]?.translation_text || text).trim();
+
+      self.postMessage({
+        status: "complete",
+        seq,
+        socketId,
+        sourceLang,
+        targetLang,
+        originalText: text,
+        isInterim,
+        translatedText,
+      });
+    } catch (err) {
+      self.postMessage({
+        status: "error",
+        seq,
+        socketId,
+        originalText: text,
+        isInterim,
+        error: err?.message || String(err),
+      });
+    }
   }
-});
+};
