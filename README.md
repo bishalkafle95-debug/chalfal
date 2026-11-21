@@ -71,11 +71,11 @@ cd chalfal/client
 npm install
 npm run dev
 ```
-The frontend runs on **http://localhost:3000** and talks to the backend at
-`http://localhost:5000`.
+The frontend runs on **https://chalfal-iota.vercel.app/dashboard** and talks to the backend at
+.
 
 ### 3. Using the app
-1. Open http://localhost:3000 — you'll see the Chalfal home page.
+1. Open https://chalfal-iota.vercel.app/dashboard — you'll see the Chalfal home page.
 2. Click **Get started** to sign up, or **Sign in** if you already have an account.
 3. From the **Dashboard**, click **Start meeting** to create a new room, or enter
    a room code under **Join a meeting**.
