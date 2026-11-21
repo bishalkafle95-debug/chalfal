@@ -1,4 +1,4 @@
-import { pipeline, env } from "@xenova/transformers";
+import { pipeline, env } from "@huggingface/transformers";
 
 // Production deployment fixes (Vercel / static hosting)
 env.allowLocalModels = false;
@@ -87,7 +87,7 @@ function reportModelProgress(modelId, file, progress) {
 async function getPipeline(modelId) {
   if (!pipelineCache.has(modelId)) {
     const loadPromise = pipeline("translation", modelId, {
-      quantized: true,
+      dtype: "q8",
       progress_callback: (data) => {
         if (data.status === "progress") {
           reportModelProgress(modelId, data.file, data.progress);
