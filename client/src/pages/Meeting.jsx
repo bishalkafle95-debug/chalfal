@@ -6,7 +6,6 @@ import { useAuth } from "../context/AuthContext.jsx";
 
 const SOCKET_URL = "https://chalfal.onrender.com";
 
-// trickle: true cuts WebRTC connection time from ~8s down to <1s
 const BASE_PEER_CONFIG = {
   trickle: true,
   config: {
@@ -18,7 +17,6 @@ const BASE_PEER_CONFIG = {
   },
 };
 
-// Balanced video resolution so WebRTC encoding doesn't choke local AI inference
 const MEDIA_CONSTRAINTS = {
   video: {
     width: { ideal: 640, max: 1280 },
@@ -100,7 +98,27 @@ const TranslateIcon = () => (
 const translationCache = new Map();
 const getBaseLang = (code = "") => code.toLowerCase().split("-")[0];
 
-// Defined outside component so React doesn't re-parse CSS on every state change
+const QUESTION_STARTERS = {
+  en: /^(what|where|when|why|who|whom|whose|which|how|is|are|am|was|were|do|does|did|can|could|will|would|shall|should|have|has|had)\b/i,
+  ne: /^(के|कहाँ|कहिले|किन|को|कस्तो|कति|कसरी|कुन)/,
+  hi: /^(क्या|कहाँ|कब|क्यों|कौन|कैसा|कैसी|कैसे|कितना|कितने|किस)/,
+  es: /^(qué|dónde|cuándo|por qué|quién|cómo|cuál|cuánto)/i,
+  fr: /^(que|quoi|où|quand|pourquoi|qui|comment|quel|quelle|est-ce)/i,
+};
+
+function punctuateForTranslation(text, sourceLang) {
+  let clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) return "";
+  const base = getBaseLang(sourceLang);
+  const isDevanagari = base === "ne" || base === "hi";
+  if (!isDevanagari) clean = clean.charAt(0).toUpperCase() + clean.slice(1);
+  if (!/[.?!।]$/.test(clean)) {
+    const qRegex = QUESTION_STARTERS[base];
+    clean += qRegex && qRegex.test(clean) ? "?" : isDevanagari ? "।" : ".";
+  }
+  return clean;
+}
+
 const MEETING_STYLES = `
   :root {
     --bg-light: #0b192c;
@@ -112,7 +130,6 @@ const MEETING_STYLES = `
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
   .page-wrapper { min-height: 100vh; background-color: var(--bg-light); display: flex; flex-direction: column; color: var(--text-main); }
 
-  /* Lobby */
   .lobby-card { background: #1a1a1a; padding: 3rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; width: 100%; max-width: 480px; text-align: center; }
   .lobby-logo { display: inline-flex; justify-content: center; color: var(--accent); margin-bottom: 1rem; }
   .lobby-title { font-size: 2rem; color: #fff; margin-bottom: 0.5rem; font-weight: 800; }
@@ -129,7 +146,6 @@ const MEETING_STYLES = `
   .btn-join { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.2s; }
   .btn-join:hover { background: #c1121f; transform: translateY(-2px); }
 
-  /* Active Meeting */
   .meet-topbar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 5%; background: #1a1a1a; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
   .logo { display: flex; align-items: center; text-decoration: none; color: #fff; font-weight: bold; font-size: 1.1rem; }
   .logo-icon { margin-right: 8px; color: var(--accent); display: flex; }
@@ -143,13 +159,11 @@ const MEETING_STYLES = `
   .v-label { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.72); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
   .v-muted { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
 
-  /* High-Visibility Subtitles */
   .v-subtitle { position: absolute; bottom: 45px; left: 5%; right: 5%; text-align: center; pointer-events: none; z-index: 5; }
   .v-subtitle span { background: rgba(0,0,0,0.88); color: #ffb703; padding: 7px 16px; border-radius: 8px; font-size: 1.05rem; font-weight: 800; text-shadow: 1px 1px 2px #000; border: 1px solid rgba(255,183,3,0.35); display: inline-block; max-width: 100%; line-height: 1.35; }
   .v-subtitle-orig { font-size: 0.78rem; color: #cfcfcf; font-weight: 400; margin-top: 3px; text-shadow: none; }
   .v-subtitle.interim span { color: #e5e5e5; background: rgba(0,0,0,0.65); font-weight: 600; border: 1px solid #666; font-size: 0.95rem; }
 
-  /* Chat */
   .chat-panel { width: 360px; background: #111; border-left: 1px solid #333; display: flex; flex-direction: column; transition: width 0.25s ease, opacity 0.25s ease; overflow: hidden; }
   .chat-panel.hidden { width: 0; opacity: 0; border-left: none; pointer-events: none; }
   .chat-panel-header { padding: 1.1rem; border-bottom: 1px solid #333; color: #fff; font-weight: 700; font-size: 1.05rem; }
@@ -161,7 +175,6 @@ const MEETING_STYLES = `
   .chat-input-row input { flex: 1; padding: 11px 14px; border: 1px solid #444; border-radius: 8px; background: #222; color: #fff; outline: none; }
   .chat-input-row button { padding: 0 18px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
-  /* Toolbar */
   .meet-toolbar { display: flex; justify-content: center; gap: 15px; padding: 0.9rem; background: #1a1a1a; border-top: 1px solid #333; position: sticky; bottom: 0; }
   .tb-btn { width: 52px; height: 52px; background: #333; color: #fff; border: 2px solid transparent; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, transform 0.2s; }
   .tb-btn:hover { background: #444; transform: translateY(-2px); }
@@ -178,7 +191,7 @@ function Meeting() {
 
   // --- UI State ---
   const [hasJoined, setHasJoined] = useState(false);
-  const [serverStatus, setServerStatus] = useState("waking"); // waking | ready | connected
+  const [serverStatus, setServerStatus] = useState("waking");
   const [peers, setPeers] = useState([]);
   const [muted, setMuted] = useState(false);
   const [videoOff, setVideoOff] = useState(false);
@@ -189,11 +202,12 @@ function Meeting() {
 
   // --- Local AI Translation State ---
   const [myLanguage, setMyLanguage] = useState("en-US");
-  const [subtitles, setSubtitles] = useState({}); // { [socketId]: { translated, original } | null }
-  const [interimSubtitles, setInterimSubtitles] = useState({}); // { [socketId]: string }
+  const [subtitles, setSubtitles] = useState({});
+  const [interimSubtitles, setInterimSubtitles] = useState({});
   const [myLiveCaption, setMyLiveCaption] = useState("");
-  const [modelStatus, setModelStatus] = useState("loading"); // loading | ready | error
+  const [modelStatus, setModelStatus] = useState("ready"); // loading | ready | error
   const [modelProgress, setModelProgress] = useState(0);
+  const [activeEngine, setActiveEngine] = useState("Local AI Ready");
   const [modelError, setModelError] = useState("");
 
   // --- Refs ---
@@ -205,7 +219,10 @@ function Meeting() {
   const recognitionRef = useRef(null);
   const workerRef = useRef(null);
 
-  // Single-flight queue refs (prevents CPU overload)
+  // Tier 1 native on-device translator instances cache: "src->tgt" => Translator | false
+  const nativeTranslatorsRef = useRef(new Map());
+
+  // Tier 2/3 worker single-flight queue refs
   const workerReadyRef = useRef(false);
   const workerBusyRef = useRef(false);
   const pendingJobsRef = useRef(new Map());
@@ -223,7 +240,6 @@ function Meeting() {
 
   const userName = user?.fullName || "Guest";
 
-  // Show finalized subtitle + original text, auto-clear after 7s
   const showFinalSubtitle = useCallback((socketId, translated, original) => {
     if (interimTimersRef.current[socketId]) {
       clearTimeout(interimTimersRef.current[socketId]);
@@ -242,7 +258,6 @@ function Meeting() {
     }, 7000);
   }, []);
 
-  // Show raw interim caption while speaker is mid-sentence, auto-clear if they stop
   const showInterimSubtitle = useCallback((socketId, text) => {
     setInterimSubtitles((prev) => ({ ...prev, [socketId]: text }));
     if (interimTimersRef.current[socketId]) {
@@ -253,7 +268,6 @@ function Meeting() {
     }, 4000);
   }, []);
 
-  // Pump next finalized translation job into the worker (1 at a time)
   const pumpWorkerQueue = useCallback(() => {
     if (!workerRef.current || !workerReadyRef.current || workerBusyRef.current) return;
     if (pendingJobsRef.current.size === 0) return;
@@ -262,10 +276,44 @@ function Meeting() {
     pendingJobsRef.current.delete(nextKey);
 
     workerBusyRef.current = true;
-    workerRef.current.postMessage({
-      type: "translate",
-      ...job,
-    });
+    workerRef.current.postMessage({ type: "translate", ...job });
+  }, []);
+
+  // Tier 1: Try Chrome/Edge built-in on-device Translator API (offline, instant, highest accuracy)
+  const tryNativeOnDeviceTranslate = useCallback(async (text, sourceLang, targetLang) => {
+    if (typeof window === "undefined" || !("Translator" in window)) return null;
+
+    const src = getBaseLang(sourceLang);
+    const tgt = getBaseLang(targetLang);
+    const key = `${src}->${tgt}`;
+
+    try {
+      let instance = nativeTranslatorsRef.current.get(key);
+      if (instance === false) return null;
+
+      if (!instance) {
+        const availability = await window.Translator.availability({
+          sourceLanguage: src,
+          targetLanguage: tgt,
+        });
+        if (!availability || availability === "unavailable") {
+          nativeTranslatorsRef.current.set(key, false);
+          return null;
+        }
+        instance = await window.Translator.create({
+          sourceLanguage: src,
+          targetLanguage: tgt,
+        });
+        nativeTranslatorsRef.current.set(key, instance);
+      }
+
+      const prepared = punctuateForTranslation(text, sourceLang);
+      const result = await instance.translate(prepared);
+      return result ? result.trim() : null;
+    } catch {
+      nativeTranslatorsRef.current.set(key, false);
+      return null;
+    }
   }, []);
 
   // ==========================================
@@ -284,7 +332,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // 1. Pre-load Local Offline Translation Worker on Mount
+  // 1. Initialize Local Offline Translation Worker
   // ==========================================
   useEffect(() => {
     let worker;
@@ -297,12 +345,14 @@ function Meeting() {
         { type: "module" }
       );
       workerRef.current = worker;
-      worker.postMessage({ type: "init" });
+      worker.postMessage({ type: "init", preferredLang: myLanguageRef.current });
 
       worker.onmessage = (event) => {
         const {
           status,
           progress,
+          model,
+          engine,
           error,
           socketId,
           sourceLang,
@@ -314,6 +364,7 @@ function Meeting() {
         if (status === "loading") {
           setModelStatus("loading");
           if (typeof progress === "number") setModelProgress(Math.round(progress));
+          if (model) setActiveEngine(`Loading ${model}`);
           return;
         }
 
@@ -322,6 +373,7 @@ function Meeting() {
           workerBusyRef.current = false;
           setModelStatus("ready");
           setModelProgress(100);
+          setActiveEngine("Local AI Ready");
           pumpWorkerQueue();
           return;
         }
@@ -334,7 +386,6 @@ function Meeting() {
             setModelStatus("error");
             setModelError(error || "Model failed to load");
           } else if (socketId && originalText) {
-            // Graceful fallback to original text if one sentence fails
             showFinalSubtitle(socketId, originalText, originalText);
             pumpWorkerQueue();
           }
@@ -345,6 +396,7 @@ function Meeting() {
           workerBusyRef.current = false;
           workerReadyRef.current = true;
           setModelStatus("ready");
+          if (engine) setActiveEngine(engine);
 
           const cacheKey = `${getBaseLang(sourceLang)}:${getBaseLang(targetLang)}:${originalText.trim().toLowerCase()}`;
           if (translationCache.size > 500) translationCache.clear();
@@ -380,7 +432,7 @@ function Meeting() {
     };
   }, [pumpWorkerQueue, showFinalSubtitle]);
 
-  const requestLocalTranslation = useCallback((socketId, text, sourceLang, isInterim) => {
+  const requestLocalTranslation = useCallback(async (socketId, text, sourceLang, isInterim) => {
     const cleanText = (text || "").trim();
     if (!cleanText) return;
 
@@ -388,13 +440,13 @@ function Meeting() {
     const seq = (latestSeqRef.current[socketId] || 0) + 1;
     latestSeqRef.current[socketId] = seq;
 
-    // 1. Interim fragments: show live preview immediately without running heavy beam search
+    // 1. Interim fragments: show live raw preview without running heavy inference
     if (isInterim) {
       showInterimSubtitle(socketId, cleanText);
       return;
     }
 
-    // 2. Same base language -> display immediately, zero AI cost
+    // 2. Same base language -> instant display
     if (getBaseLang(sourceLang) === getBaseLang(targetLang)) {
       showFinalSubtitle(socketId, cleanText, cleanText);
       return;
@@ -407,32 +459,53 @@ function Meeting() {
       return;
     }
 
-    // 4. Worker not ready yet -> fallback to original text so captions still work
+    // 4. Tier 1: Try native browser on-device Translator API first
+    const nativeResult = await tryNativeOnDeviceTranslate(cleanText, sourceLang, targetLang);
+    if (nativeResult) {
+      if (translationCache.size > 500) translationCache.clear();
+      translationCache.set(cacheKey, nativeResult);
+      setModelStatus("ready");
+      setActiveEngine("On-Device AI");
+      showFinalSubtitle(socketId, nativeResult, cleanText);
+      return;
+    }
+
+    // 5. Fallback if worker is unavailable
     if (!workerRef.current || !workerReadyRef.current) {
       showFinalSubtitle(socketId, cleanText, cleanText);
       return;
     }
 
-    // 5. Show live raw text immediately while beam-search translation computes
+    // 6. Tier 2/3: Queue into Opus-MT / NLLB worker
     showInterimSubtitle(socketId, `${cleanText} ...`);
-
-    // Keep only the newest pending finalized sentence per speaker so lag never snowballs
     pendingJobsRef.current.set(socketId, {
       seq,
       socketId,
       text: cleanText,
       sourceLang,
       targetLang,
-      isInterim: false,
     });
-
     pumpWorkerQueue();
-  }, [pumpWorkerQueue, showFinalSubtitle, showInterimSubtitle]);
+  }, [pumpWorkerQueue, showFinalSubtitle, showInterimSubtitle, tryNativeOnDeviceTranslate]);
 
   const requestTranslationRef = useRef(requestLocalTranslation);
   useEffect(() => {
     requestTranslationRef.current = requestLocalTranslation;
   }, [requestLocalTranslation]);
+
+  // Pre-warm Tier 1 native packs on Join click (uses valid user gesture)
+  const handleLobbyJoin = (e) => {
+    e.preventDefault();
+    const myBase = getBaseLang(myLanguage);
+    if ("Translator" in window) {
+      const commonSource = myBase === "en" ? "hi" : "en";
+      tryNativeOnDeviceTranslate("hello", commonSource, myLanguage).catch(() => {});
+    }
+    if (myBase === "ne" && workerRef.current) {
+      workerRef.current.postMessage({ type: "init", preferredLang: myLanguage });
+    }
+    setHasJoined(true);
+  };
 
   // ==========================================
   // 2. Speech Recognition
@@ -473,7 +546,6 @@ function Meeting() {
       const trimmedInterim = interimTranscript.trim();
       const trimmedFinal = finalTranscript.trim();
 
-      // Throttle interim previews to keep socket traffic light
       if (trimmedInterim && now - lastInterimEmitRef.current >= 900) {
         lastInterimEmitRef.current = now;
         setMyLiveCaption(trimmedInterim);
@@ -531,7 +603,6 @@ function Meeting() {
     };
   }, [hasJoined, myLanguage, roomCode, userName]);
 
-  // Pause/resume SpeechRecognition cleanly when toggling mute
   useEffect(() => {
     const rec = recognitionRef.current;
     if (!rec || !hasJoined) return;
@@ -798,9 +869,9 @@ function Meeting() {
 
   const aiBadgeText =
     modelStatus === "ready"
-      ? "Local AI Ready"
+      ? activeEngine
       : modelStatus === "loading"
-      ? `Loading AI ${modelProgress}%`
+      ? `${activeEngine} ${modelProgress}%`
       : "Captions Only (AI Error)";
 
   // ==========================================
@@ -834,14 +905,14 @@ function Meeting() {
             </div>
           </div>
 
-          <form onSubmit={(e) => { e.preventDefault(); setHasJoined(true); }}>
+          <form onSubmit={handleLobbyJoin}>
             <div className="form-group">
               <label>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
                   <TranslateIcon /> Select your language
                 </div>
                 <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: "normal" }}>
-                  Offline AI model pre-loads automatically in the background.
+                  Uses on-device AI & dedicated bilingual models (zero external APIs).
                 </span>
               </label>
               <select
@@ -985,7 +1056,6 @@ function Meeting() {
   );
 }
 
-// Memoized so chat input & other peers' updates don't re-render this video element
 const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff, finalSubtitle, interimSubtitle }) {
   const ref = useRef(null);
 
@@ -1021,7 +1091,6 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
   );
 });
 
-// Isolated chat state so typing never re-renders the video tiles
 const ChatPanel = memo(function ChatPanel({ open, messages, onSend }) {
   const [input, setInput] = useState("");
   const chatEndRef = useRef(null);
