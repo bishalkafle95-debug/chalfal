@@ -38,14 +38,9 @@ const SUPPORTED_LANGUAGES = [
   { code: "fr-FR", short: "FR", name: "French" },
 ];
 
-const LINGVA_INSTANCES = [
-  "https://lingva.ml/api/v1",
-  "https://lingva.lunar.icu/api/v1",
-];
-
 // --- Icons ---
 const MicOnIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
     <line x1="12" y1="19" x2="12" y2="23" />
@@ -53,7 +48,7 @@ const MicOnIcon = () => (
   </svg>
 );
 const MicOffIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="1" y1="1" x2="23" y2="23" />
     <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
     <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
@@ -62,36 +57,36 @@ const MicOffIcon = () => (
   </svg>
 );
 const CamOnIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polygon points="23 7 16 12 23 17 23 7" />
     <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
   </svg>
 );
 const CamOffIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" />
     <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
 const ScreenIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
     <path d="M8 21h8M12 17v4" />
   </svg>
 );
 const ChatIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
   </svg>
 );
 const CaptionsIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <path d="M7 15h4M15 15h2M7 11h2M13 11h4" />
   </svg>
 );
 const EndIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
   </svg>
 );
@@ -106,22 +101,17 @@ const TranslateIcon = () => (
   </svg>
 );
 const CopyIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
   </svg>
 );
-const UsersIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-  </svg>
-);
 
-// --- Language & Translation Helpers ---
+// ==========================================
+// Robust Free Translation Engine (Chunked + Timeout + Multi-Provider)
+// ==========================================
 const translationCache = new Map();
+const providerCooldown = new Map(); // Temporarily skip failed/rate-limited providers
 
 const getBaseLang = (code) => {
   if (!code || typeof code !== "string") return "auto";
@@ -133,6 +123,14 @@ const getLangName = (code) => {
   const match = SUPPORTED_LANGUAGES.find((l) => getBaseLang(l.code) === base);
   return match ? match.name : base === "auto" ? "Auto" : base.toUpperCase();
 };
+
+const getInitials = (name = "G") =>
+  name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() || "")
+    .join("") || "G";
 
 const QUESTION_STARTERS = {
   en: /^(what|what's|where|where's|when|why|who|who's|whom|whose|which|how|how's|is|are|am|was|were|do|does|did|can|could|will|would|shall|should|have|has|had)\b/i,
@@ -187,16 +185,194 @@ function normalizeSpeechText(text, sourceLang) {
 function resolveSourceParam(text, sourceLang) {
   const base = getBaseLang(sourceLang);
   if (base === "auto") return "auto";
-  // If speaker selected Nepali/Hindi but Web Speech transcribed Latin/English words, use auto-detect
+  // If user selected Nepali/Hindi but Web Speech transcribed English/Latin words, auto-detect
   if ((base === "ne" || base === "hi") && !/[\u0900-\u097F]/.test(text)) {
     return "auto";
   }
   return base;
 }
 
-// Multi-provider free translation engine:
-// 1. Google Translate GTX -> 2. Lingva Translate (Google proxy) -> 3. MyMemory (filtered)
-async function translateWithBestFreeAPI(text, sourceLang, targetLang, signal) {
+// Splits long speech into natural chunks <= 150 chars so URL-based free APIs NEVER fail on long sentences
+function splitIntoChunks(text, maxChars = 150) {
+  const clean = (text || "").replace(/\s+/g, " ").trim();
+  if (clean.length <= maxChars) return [clean];
+
+  const chunks = [];
+  // First split on sentence punctuation while keeping punctuation attached
+  const sentences = clean.split(/(?<=[.?!।])\s+/);
+
+  for (const sentence of sentences) {
+    if (sentence.length <= maxChars) {
+      chunks.push(sentence);
+      continue;
+    }
+
+    // Split long unpunctuated speech on clauses or words
+    const words = sentence.split(/\s+/);
+    let current = "";
+
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (candidate.length <= maxChars) {
+        current = candidate;
+      } else {
+        if (current) chunks.push(current);
+        current = word.length > maxChars ? word.slice(0, maxChars) : word;
+      }
+    }
+    if (current) chunks.push(current);
+  }
+
+  return chunks.filter(Boolean);
+}
+
+// Fetch with hard timeout + optional external AbortSignal so a slow provider never stalls translation
+async function fetchWithTimeout(url, externalSignal, timeoutMs = 4500) {
+  const controller = new AbortController();
+  const onExternalAbort = () => controller.abort();
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort();
+    } else {
+      externalSignal.addEventListener("abort", onExternalAbort, { once: true });
+    }
+  }
+
+  const timer = setTimeout(() => controller.abort("timeout"), timeoutMs);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+    if (externalSignal) {
+      externalSignal.removeEventListener("abort", onExternalAbort);
+    }
+  }
+}
+
+const isProviderCoolingDown = (name) => (providerCooldown.get(name) || 0) > Date.now();
+const markProviderCooldown = (name, ms = 45000) => providerCooldown.set(name, Date.now() + ms);
+
+async function translateSingleChunk(chunk, src, tgt, signal) {
+  const cacheKey = `${src}:${tgt}:${chunk.toLowerCase()}`;
+  if (translationCache.has(cacheKey)) {
+    return translationCache.get(cacheKey);
+  }
+
+  const saveCache = (result) => {
+    if (translationCache.size > 1200) translationCache.clear();
+    translationCache.set(cacheKey, result);
+    return result;
+  };
+
+  // Provider 1: Google Translate GTX (Primary - Best accuracy for EN/NE/HI/ES/FR)
+  if (!isProviderCoolingDown("gtx")) {
+    try {
+      const url =
+        `https://translate.googleapis.com/translate_a/single?client=gtx` +
+        `&sl=${encodeURIComponent(src)}&tl=${encodeURIComponent(tgt)}` +
+        `&dt=t&q=${encodeURIComponent(chunk)}`;
+
+      const res = await fetchWithTimeout(url, signal, 4500);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data?.[0])) {
+          const translated = data[0]
+            .map((seg) => (Array.isArray(seg) ? seg[0] : ""))
+            .join("")
+            .trim();
+          const detectedLang = typeof data?.[2] === "string" ? data[2] : src;
+          if (translated) return saveCache({ text: translated, detectedLang });
+        }
+      } else if (res.status === 429) {
+        markProviderCooldown("gtx", 30000);
+      }
+    } catch (err) {
+      if (signal?.aborted) throw err;
+    }
+  }
+
+  // Provider 2: Google Chrome Extension endpoint (Same Google NMT quality, separate rate-limit pool)
+  if (!isProviderCoolingDown("clients5")) {
+    try {
+      const url =
+        `https://clients5.google.com/translate_a/t?client=dict-chrome-ex` +
+        `&sl=${encodeURIComponent(src)}&tl=${encodeURIComponent(tgt)}` +
+        `&q=${encodeURIComponent(chunk)}`;
+
+      const res = await fetchWithTimeout(url, signal, 4500);
+      if (res.ok) {
+        const data = await res.json();
+        let translated = "";
+        let detectedLang = src;
+
+        if (Array.isArray(data)) {
+          if (typeof data[0] === "string") {
+            translated = data[0].trim();
+          } else if (Array.isArray(data[0]) && typeof data[0][0] === "string") {
+            translated = data[0][0].trim();
+            if (typeof data[0][1] === "string") detectedLang = data[0][1];
+          }
+        }
+        if (translated) return saveCache({ text: translated, detectedLang });
+      } else if (res.status === 429) {
+        markProviderCooldown("clients5", 30000);
+      }
+    } catch (err) {
+      if (signal?.aborted) throw err;
+    }
+  }
+
+  // Provider 3: Lingva Translate (Open-source Google Translate proxy; sanitize slashes for URL path)
+  const lingvaHosts = ["https://lingva.ml/api/v1", "https://lingva.lunar.icu/api/v1"];
+  for (const host of lingvaHosts) {
+    if (isProviderCoolingDown(host)) continue;
+    try {
+      const pathSafe = chunk.replace(/\//g, " ");
+      const url = `${host}/${encodeURIComponent(src)}/${encodeURIComponent(tgt)}/${encodeURIComponent(pathSafe)}`;
+      const res = await fetchWithTimeout(url, signal, 4000);
+      if (res.ok) {
+        const data = await res.json();
+        const translated = (data?.translation || "").trim();
+        if (translated) return saveCache({ text: translated, detectedLang: src });
+      } else {
+        markProviderCooldown(host, 60000);
+      }
+    } catch (err) {
+      if (signal?.aborted) throw err;
+      markProviderCooldown(host, 60000);
+    }
+  }
+
+  // Provider 4: MyMemory (Filtered so warning text never appears)
+  if (!isProviderCoolingDown("mymemory")) {
+    try {
+      const mmSrc = src === "auto" ? "en" : src;
+      if (mmSrc !== tgt) {
+        const url =
+          `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}` +
+          `&langpair=${encodeURIComponent(`${mmSrc}|${tgt}`)}`;
+        const res = await fetchWithTimeout(url, signal, 4500);
+        if (res.ok) {
+          const data = await res.json();
+          const translated = (data?.responseData?.translatedText || "").trim();
+          const isWarning = /MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(translated);
+          if (data?.responseStatus === 200 && translated && !isWarning) {
+            return saveCache({ text: translated, detectedLang: mmSrc });
+          }
+        } else if (res.status === 429) {
+          markProviderCooldown("mymemory", 60000);
+        }
+      }
+    } catch (err) {
+      if (signal?.aborted) throw err;
+    }
+  }
+
+  return { text: chunk, detectedLang: src };
+}
+
+async function translateFullText(text, sourceLang, targetLang, signal) {
   const raw = (text || "").trim();
   const tgt = getBaseLang(targetLang);
   if (!raw || tgt === "auto") return { text: raw, detectedLang: getBaseLang(sourceLang) };
@@ -207,132 +383,64 @@ async function translateWithBestFreeAPI(text, sourceLang, targetLang, signal) {
   }
 
   const prepared = normalizeSpeechText(raw, sourceLang);
-  const cacheKey = `${src}:${tgt}:${prepared.toLowerCase()}`;
-  if (translationCache.has(cacheKey)) {
-    return translationCache.get(cacheKey);
+  const fullCacheKey = `FULL:${src}:${tgt}:${prepared.toLowerCase()}`;
+  if (translationCache.has(fullCacheKey)) {
+    return translationCache.get(fullCacheKey);
   }
 
-  const saveCache = (result) => {
-    if (translationCache.size > 1000) translationCache.clear();
-    translationCache.set(cacheKey, result);
-    return result;
-  };
+  // Chunk long sentences cleanly and translate chunks in parallel
+  const chunks = splitIntoChunks(prepared, 150);
+  const translatedChunks = await Promise.all(
+    chunks.map((c) => translateSingleChunk(c, src, tgt, signal))
+  );
 
-  // Provider 1: Google Translate public GTX endpoint (highest accuracy for EN/NE/HI/ES/FR)
-  try {
-    const googleUrl =
-      `https://translate.googleapis.com/translate_a/single?client=gtx` +
-      `&sl=${encodeURIComponent(src)}&tl=${encodeURIComponent(tgt)}` +
-      `&dt=t&q=${encodeURIComponent(prepared)}`;
+  const combinedText = translatedChunks.map((r) => r.text).join(" ").replace(/\s+/g, " ").trim();
+  const detectedLang = translatedChunks[0]?.detectedLang || src;
+  const finalResult = { text: combinedText || raw, detectedLang };
 
-    const res = await fetch(googleUrl, { signal });
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data?.[0])) {
-        const translated = data[0]
-          .map((seg) => (Array.isArray(seg) ? seg[0] : ""))
-          .join("")
-          .trim();
-        const detectedLang = typeof data?.[2] === "string" ? data[2] : src;
-
-        if (translated) {
-          return saveCache({ text: translated, detectedLang, provider: "Google" });
-        }
-      }
-    }
-  } catch (err) {
-    if (err?.name === "AbortError") throw err;
-  }
-
-  // Provider 2: Lingva Translate (free open-source Google Translate REST proxy, avoids direct 429s)
-  for (const baseUrl of LINGVA_INSTANCES) {
-    try {
-      const lingvaUrl = `${baseUrl}/${encodeURIComponent(src)}/${encodeURIComponent(tgt)}/${encodeURIComponent(prepared)}`;
-      const res = await fetch(lingvaUrl, { signal });
-      if (res.ok) {
-        const data = await res.json();
-        const translated = (data?.translation || "").trim();
-        if (translated) {
-          return saveCache({ text: translated, detectedLang: src, provider: "Lingva" });
-        }
-      }
-    } catch (err) {
-      if (err?.name === "AbortError") throw err;
-    }
-  }
-
-  // Provider 3: MyMemory free API (strictly filtered so warning text is never shown)
-  try {
-    const mmSrc = src === "auto" ? "en" : src;
-    if (mmSrc !== tgt) {
-      const myMemoryUrl =
-        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(prepared)}` +
-        `&langpair=${encodeURIComponent(`${mmSrc}|${tgt}`)}`;
-
-      const res = await fetch(myMemoryUrl, { signal });
-      if (res.ok) {
-        const data = await res.json();
-        const translated = (data?.responseData?.translatedText || "").trim();
-        const isWarning = /MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(translated);
-        if (data?.responseStatus === 200 && translated && !isWarning) {
-          return saveCache({ text: translated, detectedLang: mmSrc, provider: "MyMemory" });
-        }
-      }
-    }
-  } catch (err) {
-    if (err?.name === "AbortError") throw err;
-  }
-
-  return { text: raw, detectedLang: src, provider: "fallback" };
+  if (translationCache.size > 1200) translationCache.clear();
+  translationCache.set(fullCacheKey, finalResult);
+  return finalResult;
 }
 
-const getInitials = (name = "G") =>
-  name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() || "")
-    .join("") || "G";
-
-// --- Modern Glassmorphic Dark UI Styles ---
+// ==========================================
+// Original Chalfal Theme Colors — Modernized Layout
+// ==========================================
 const MEETING_STYLES = `
   :root {
-    --bg-canvas: #070b14;
-    --bg-surface: rgba(17, 24, 39, 0.78);
-    --bg-elevated: rgba(30, 41, 59, 0.72);
-    --border-subtle: rgba(255, 255, 255, 0.09);
-    --border-strong: rgba(255, 255, 255, 0.16);
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
-    --success: #10b981;
-    --amber: #fbbf24;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+    --bg-light: #0b192c;
+    --surface: #1a1a1a;
+    --surface-dark: #111;
+    --border: #333;
+    --border-soft: rgba(255, 255, 255, 0.1);
+    --accent: #e63946;
+    --accent-hover: #c1121f;
+    --accent-light: rgba(230, 57, 70, 0.2);
+    --amber: #ffb703;
+    --green: #2ecc71;
+    --text-main: #fff;
+    --text-muted: #bbb;
   }
 
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 
   .page-wrapper {
     min-height: 100vh;
     height: 100vh;
-    background:
-      radial-gradient(circle at 12% 10%, rgba(99, 102, 241, 0.16), transparent 40%),
-      radial-gradient(circle at 88% 85%, rgba(16, 185, 129, 0.12), transparent 42%),
-      var(--bg-canvas);
+    background-color: var(--bg-light);
+    background-image: radial-gradient(circle at top right, rgba(230, 57, 70, 0.08), transparent 40%);
     display: flex;
     flex-direction: column;
     color: var(--text-main);
     overflow: hidden;
   }
 
-  /* --- Modern Pre-Join Lobby --- */
+  /* --- Pre-Join Lobby --- */
   .lobby-shell {
     flex: 1;
     display: flex;
@@ -342,68 +450,50 @@ const MEETING_STYLES = `
     overflow-y: auto;
   }
   .lobby-card {
-    background: var(--bg-surface);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 2.5rem;
-    border-radius: 24px;
-    border: 1px solid var(--border-subtle);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    background: var(--surface);
+    padding: 2.75rem 2.5rem;
+    border-radius: 18px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+    border: 1px solid var(--border);
     width: 100%;
-    max-width: 460px;
+    max-width: 470px;
     text-align: center;
   }
-  .lobby-brand {
+  .lobby-logo {
     width: 56px;
     height: 56px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: #fff;
+    border-radius: 14px;
+    background: var(--accent-light);
+    border: 1px solid rgba(230, 57, 70, 0.35);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35);
+    color: var(--accent);
+    margin-bottom: 1rem;
   }
-  .lobby-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
-  .lobby-sub { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
-  .room-chip {
-    display: inline-block;
-    background: rgba(99, 102, 241, 0.16);
-    color: #a5b4fc;
-    border: 1px solid rgba(99, 102, 241, 0.35);
-    padding: 2px 10px;
-    border-radius: 999px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-weight: 700;
-  }
+  .lobby-title { font-size: 1.9rem; color: #fff; margin-bottom: 0.45rem; font-weight: 800; }
+  .lobby-sub { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 1.35rem; }
   .lobby-status {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.4rem;
     padding: 7px 14px;
     border-radius: 999px;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid var(--border-subtle);
-    font-size: 0.82rem;
+    background: var(--surface-dark);
+    border: 1px solid var(--border);
+    font-size: 0.83rem;
     font-weight: 600;
   }
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--amber);
-  }
-  .lobby-status.ok .status-dot { background: var(--success); box-shadow: 0 0 10px var(--success); }
-  .lobby-status.ok { color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
-  .lobby-status.warn { color: #fde68a; border-color: rgba(251, 191, 36, 0.3); }
+  .lobby-status.ok { border-color: rgba(46, 204, 113, 0.4); color: var(--green); }
+  .lobby-status.warn { border-color: rgba(255, 183, 3, 0.4); color: var(--amber); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 
   .lobby-toggles {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.4rem;
   }
   .lobby-toggle-btn {
     display: flex;
@@ -411,242 +501,195 @@ const MEETING_STYLES = `
     justify-content: center;
     gap: 8px;
     padding: 11px;
-    border-radius: 12px;
-    border: 1px solid var(--border-subtle);
-    background: rgba(30, 41, 59, 0.55);
-    color: var(--text-main);
-    font-size: 0.88rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-light);
+    color: #fff;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
   }
-  .lobby-toggle-btn:hover { background: rgba(51, 65, 85, 0.7); }
+  .lobby-toggle-btn:hover { border-color: #555; }
   .lobby-toggle-btn.off {
-    background: rgba(239, 68, 68, 0.14);
-    border-color: rgba(239, 68, 68, 0.4);
-    color: #fca5a5;
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  .form-group { text-align: left; margin-bottom: 1.5rem; }
-  .form-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
-  .form-hint { display: block; font-size: 0.78rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+  .form-group { text-align: left; margin-bottom: 1.65rem; }
+  .form-group label { display: block; margin-bottom: 8px; color: #fff; font-size: 0.95rem; font-weight: 600; }
+  .form-hint { display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 400; margin-top: 3px; }
   .lobby-select {
     width: 100%;
     padding: 13px 16px;
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    font-size: 0.98rem;
-    color: var(--text-main);
+    background: var(--bg-light);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #fff;
     outline: none;
     cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s;
   }
-  .lobby-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25); }
+  .lobby-select:focus { border-color: var(--accent); }
   .btn-join {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    background: var(--accent);
     color: #fff;
     border: none;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 10px;
+    font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    transition: background 0.2s, transform 0.18s;
   }
-  .btn-join:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(99, 102, 241, 0.45); }
+  .btn-join:hover { background: var(--accent-hover); transform: translateY(-1px); }
 
-  /* --- Top Bar --- */
+  /* --- Topbar --- */
   .meet-topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1.5rem;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.7rem 1.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
     z-index: 30;
-    gap: 12px;
     flex-wrap: wrap;
+    gap: 10px;
   }
   .topbar-left { display: flex; align-items: center; gap: 14px; }
   .logo {
     display: flex;
     align-items: center;
-    gap: 9px;
-    text-decoration: none;
-    color: var(--text-main);
-    font-weight: 800;
-    font-size: 1.05rem;
-    letter-spacing: -0.02em;
-  }
-  .logo-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-  }
-  .room-code-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(255, 255, 255, 0.06);
-    color: #e2e8f0;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    border: 1px solid var(--border-subtle);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .room-code-btn:hover { background: rgba(255, 255, 255, 0.12); }
-
-  .lang-pill {
-    display: flex;
-    align-items: center;
     gap: 8px;
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid var(--border-strong);
-    padding: 6px 12px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+  .logo-icon { color: var(--accent); display: flex; }
+
+  .lang-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #262626;
+    border: 1px solid var(--border);
+    padding: 5px 12px;
     border-radius: 999px;
-    color: #c7d2fe;
   }
   .lang-select-inline {
     background: transparent;
     color: #fff;
     border: none;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.86rem;
     outline: none;
     cursor: pointer;
   }
-  .lang-select-inline option { background: #0f172a; color: #fff; }
-  .live-badge {
+  .lang-select-inline option { background: #1a1a1a; color: #fff; }
+  .live-pill {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     padding: 3px 9px;
     border-radius: 999px;
     font-weight: 700;
   }
-  .live-badge.ok { background: rgba(16, 185, 129, 0.16); color: #6ee7b7; }
-  .live-badge.warn { background: rgba(251, 191, 36, 0.16); color: #fde68a; }
-  .participant-pill {
+  .live-pill.ok { background: rgba(46, 204, 113, 0.2); color: var(--green); }
+  .live-pill.warn { background: rgba(255, 183, 3, 0.2); color: var(--amber); }
+
+  .room-code {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 11px;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 6px 13px;
     border-radius: 999px;
-    border: 1px solid var(--border-subtle);
-    font-weight: 600;
+    font-size: 0.86rem;
+    border: 1px solid rgba(230, 57, 70, 0.35);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
   }
+  .room-code:hover { background: rgba(230, 57, 70, 0.3); }
 
-  /* --- Main Stage --- */
-  .meet-body {
-    flex: 1;
-    display: flex;
-    min-height: 0;
-    position: relative;
-  }
-  .video-stage {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    position: relative;
-  }
+  /* --- Main Video Area --- */
+  .meet-body { flex: 1; display: flex; min-height: 0; position: relative; }
+  .video-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #000; }
   .video-grid {
     flex: 1;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
     gap: 1rem;
-    padding: 1.25rem 1.25rem 5.75rem;
+    padding: 1rem 1rem 5.5rem;
     overflow-y: auto;
     align-content: center;
   }
-  .video-grid.single-tile {
-    max-width: 960px;
-    width: 100%;
-    margin: 0 auto;
-  }
+  .video-grid.single-tile { max-width: 960px; width: 100%; margin: 0 auto; }
+
   .video-tile {
     position: relative;
-    background: #0f172a;
-    border-radius: 18px;
+    background: var(--surface);
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
     aspect-ratio: 16 / 9;
-    border: 1.5px solid var(--border-subtle);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    border: 2px solid var(--border);
     contain: layout style paint;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease;
   }
   .video-tile.speaking {
-    border-color: rgba(99, 102, 241, 0.85);
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3), 0 16px 36px rgba(0, 0, 0, 0.5);
+    border-color: var(--amber);
+    box-shadow: 0 0 0 1px rgba(255, 183, 3, 0.4), 0 10px 28px rgba(0, 0, 0, 0.6);
   }
-  .video-tile video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+  .video-tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-tile.video-off { background: linear-gradient(135deg, #1b263b, #0b192c); }
   .video-tile.video-off video { opacity: 0; }
+
   .avatar-fallback {
     position: absolute;
     inset: 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 75%);
   }
   .avatar-circle {
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    background: var(--accent);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
   }
+
   .v-label {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    background: rgba(2, 6, 23, 0.68);
-    backdrop-filter: blur(8px);
-    color: #f8fafc;
-    padding: 5px 11px;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    padding: 4px 11px;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
   .v-muted {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(239, 68, 68, 0.9);
+    top: 10px;
+    right: 10px;
+    background: var(--accent);
     color: #fff;
     width: 32px;
     height: 32px;
@@ -654,30 +697,30 @@ const MEETING_STYLES = `
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    border: 2px solid #fff;
   }
 
-  /* --- Modern Dual-Language Subtitle Card (Shows BOTH Spoken & Translated) --- */
+  /* --- Dual-Language Subtitle Box (Shows BOTH Spoken & Translated) --- */
   .dual-caption-wrap {
     position: absolute;
-    bottom: 14px;
-    left: 14px;
-    right: 14px;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
     display: flex;
     justify-content: center;
     pointer-events: none;
     z-index: 8;
   }
   .dual-caption-card {
-    background: rgba(7, 11, 20, 0.86);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 14px;
-    padding: 10px 14px;
+    background: rgba(11, 25, 44, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 183, 3, 0.35);
+    border-radius: 12px;
+    padding: 9px 14px;
     max-width: 96%;
     min-width: 240px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -688,51 +731,45 @@ const MEETING_STYLES = `
     align-items: baseline;
     gap: 8px;
     line-height: 1.38;
+    word-break: break-word;
   }
   .caption-row.original {
-    color: #cbd5e1;
+    color: #e5e5e5;
     font-size: 0.88rem;
     font-weight: 500;
     padding-bottom: 5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   }
-  .caption-row.original.solo {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
+  .caption-row.original.solo { border-bottom: none; padding-bottom: 0; }
   .caption-row.translated {
-    color: #fde68a;
-    font-size: 1.03rem;
-    font-weight: 700;
+    color: var(--amber);
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
   .caption-row.translated.pending {
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 0.86rem;
     font-style: italic;
     font-weight: 500;
+    text-shadow: none;
   }
   .lang-tag {
     flex-shrink: 0;
     font-size: 0.66rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     padding: 2px 7px;
-    border-radius: 6px;
+    border-radius: 5px;
   }
-  .lang-tag.src {
-    background: rgba(148, 163, 184, 0.2);
-    color: #e2e8f0;
-  }
-  .lang-tag.tgt {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fcd34d;
-  }
+  .lang-tag.src { background: rgba(255, 255, 255, 0.14); color: #fff; }
+  .lang-tag.tgt { background: rgba(255, 183, 3, 0.22); color: var(--amber); }
 
-  /* --- Floating Bottom Control Dock --- */
+  /* --- Floating Toolbar Dock --- */
   .meet-dock-wrap {
     position: absolute;
-    bottom: 18px;
+    bottom: 16px;
     left: 0;
     right: 0;
     display: flex;
@@ -743,68 +780,66 @@ const MEETING_STYLES = `
   .meet-toolbar {
     pointer-events: auto;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid var(--border-strong);
+    gap: 12px;
+    padding: 9px 18px;
+    background: rgba(26, 26, 26, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
     border-radius: 999px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
   }
   .tb-btn {
-    width: 46px;
-    height: 46px;
-    background: rgba(51, 65, 85, 0.65);
-    color: #f8fafc;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 48px;
+    height: 48px;
+    background: #333;
+    color: #fff;
+    border: 2px solid transparent;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     position: relative;
-    transition: all 0.18s ease;
+    transition: all 0.2s ease;
   }
-  .tb-btn:hover { background: rgba(71, 85, 105, 0.9); transform: translateY(-2px); }
-  .tb-btn.active-accent {
-    background: rgba(99, 102, 241, 0.25);
-    border-color: rgba(99, 102, 241, 0.6);
-    color: #c7d2fe;
+  .tb-btn:hover { background: #444; transform: translateY(-2px); }
+  .tb-btn.active-amber {
+    background: rgba(255, 183, 3, 0.18);
+    color: var(--amber);
+    border-color: rgba(255, 183, 3, 0.6);
   }
   .tb-btn.off {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    border-color: rgba(239, 68, 68, 0.5);
+    background: var(--accent-light);
+    color: var(--accent);
+    border-color: var(--accent);
   }
   .tb-btn.end {
     width: 56px;
     border-radius: 999px;
-    background: var(--danger);
-    border-color: transparent;
+    background: var(--accent);
     color: #fff;
   }
-  .tb-btn.end:hover { background: var(--danger-hover); }
+  .tb-btn.end:hover { background: var(--accent-hover); }
   .unread-dot {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 7px;
+    right: 7px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #fbbf24;
+    background: var(--amber);
   }
 
-  /* --- Tabbed Side Panel (Chat + Live Bilingual Transcript) --- */
+  /* --- Side Panel (Transcript & Chat) --- */
   .side-panel {
     width: 370px;
-    background: rgba(15, 23, 42, 0.9);
-    backdrop-filter: blur(20px);
-    border-left: 1px solid var(--border-subtle);
+    background: var(--surface-dark);
+    border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    transition: width 0.24s ease, opacity 0.2s ease;
+    transition: width 0.25s ease, opacity 0.2s ease;
     overflow: hidden;
     z-index: 20;
   }
@@ -814,23 +849,24 @@ const MEETING_STYLES = `
     grid-template-columns: 1fr 1fr;
     padding: 10px;
     gap: 8px;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
   }
   .panel-tab {
     padding: 9px 10px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid transparent;
     background: transparent;
     color: var(--text-muted);
-    font-size: 0.86rem;
+    font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.18s;
+    transition: all 0.2s;
   }
   .panel-tab.active {
-    background: rgba(99, 102, 241, 0.18);
-    border-color: rgba(99, 102, 241, 0.35);
-    color: #e0e7ff;
+    background: var(--accent-light);
+    border-color: rgba(230, 57, 70, 0.45);
+    color: #fff;
   }
   .panel-list {
     flex: 1;
@@ -838,92 +874,84 @@ const MEETING_STYLES = `
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.85rem;
+    background: var(--surface);
   }
   .empty-state {
-    color: var(--text-muted);
+    color: #888;
     font-size: 0.86rem;
     text-align: center;
     margin-top: 2rem;
     line-height: 1.5;
   }
-  .chat-bubble {
-    background: rgba(30, 41, 59, 0.65);
-    border: 1px solid var(--border-subtle);
-    border-radius: 14px;
-    padding: 10px 13px;
-    font-size: 0.92rem;
-    line-height: 1.45;
+  .chat-card, .transcript-card {
+    background: var(--surface-dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
   }
-  .bubble-meta {
+  .card-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
-    font-size: 0.78rem;
+    margin-bottom: 5px;
+    font-size: 0.8rem;
   }
-  .bubble-name { font-weight: 700; color: #a5b4fc; }
-  .bubble-time { color: var(--text-muted); font-size: 0.72rem; }
+  .cm-name { font-weight: 700; color: var(--amber); }
+  .cm-time { color: #888; font-size: 0.74rem; }
+  .chat-body { color: #fff; font-size: 0.92rem; line-height: 1.45; }
 
-  .transcript-item {
-    background: rgba(30, 41, 59, 0.55);
-    border: 1px solid var(--border-subtle);
-    border-radius: 14px;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
   .transcript-orig {
-    font-size: 0.84rem;
-    color: #cbd5e1;
+    color: #ddd;
+    font-size: 0.86rem;
     display: flex;
     gap: 6px;
     align-items: baseline;
+    line-height: 1.4;
+    margin-bottom: 5px;
   }
   .transcript-trans {
-    font-size: 0.94rem;
-    color: #fde68a;
-    font-weight: 600;
+    color: var(--amber);
+    font-size: 0.95rem;
+    font-weight: 700;
     display: flex;
     gap: 6px;
     align-items: baseline;
+    line-height: 1.4;
   }
 
   .chat-input-row {
-    padding: 0.85rem;
-    border-top: 1px solid var(--border-subtle);
+    padding: 0.9rem;
+    border-top: 1px solid var(--border);
     display: flex;
     gap: 8px;
-    background: rgba(7, 11, 20, 0.6);
+    background: var(--surface-dark);
   }
   .chat-input-row input {
     flex: 1;
     padding: 11px 14px;
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #222;
     color: #fff;
-    font-size: 0.9rem;
     outline: none;
   }
-  .chat-input-row input:focus { border-color: var(--primary); }
+  .chat-input-row input:focus { border-color: var(--accent); }
   .chat-input-row button {
     padding: 0 18px;
-    background: var(--primary);
+    background: var(--accent);
     color: #fff;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 0.88rem;
     cursor: pointer;
   }
-  .chat-input-row button:hover { background: var(--primary-hover); }
+  .chat-input-row button:hover { background: var(--accent-hover); }
 
   @media (max-width: 900px) {
     .meet-body { flex-direction: column; }
-    .video-grid { grid-template-columns: 1fr; padding: 0.85rem 0.85rem 5.5rem; }
-    .side-panel { width: 100%; height: 42vh; border-left: none; border-top: 1px solid var(--border-subtle); }
+    .video-grid { grid-template-columns: 1fr; padding: 0.85rem 0.85rem 5.4rem; }
+    .side-panel { width: 100%; height: 40vh; border-left: none; border-top: 1px solid var(--border); }
     .side-panel.hidden { height: 0; width: 100%; }
     .meet-topbar { padding: 0.65rem 1rem; }
   }
@@ -937,6 +965,7 @@ function Meeting() {
   // --- UI & Call State ---
   const [hasJoined, setHasJoined] = useState(false);
   const [serverStatus, setServerStatus] = useState("waking"); // waking | ready | connected
+  const [micState, setMicState] = useState("idle"); // idle | listening | restarting | unsupported
   const [peers, setPeers] = useState([]);
   const [muted, setMuted] = useState(false);
   const [videoOff, setVideoOff] = useState(false);
@@ -948,9 +977,8 @@ function Meeting() {
   const [unreadChat, setUnreadChat] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  // --- Translation & Dual-Subtitle State ---
+  // --- Dual-Language Subtitles & Transcript State ---
   const [myLanguage, setMyLanguage] = useState("en-US");
-  // { [socketId]: { original, translated, sourceLang, targetLang, isLive, isTranslating } | null }
   const [subtitles, setSubtitles] = useState({});
   const [transcriptHistory, setTranscriptHistory] = useState([]);
   const [myLiveCaption, setMyLiveCaption] = useState("");
@@ -961,7 +989,6 @@ function Meeting() {
   const streamRef = useRef(null);
   const screenStreamRef = useRef(null);
   const peersRef = useRef([]);
-  const recognitionRef = useRef(null);
 
   const myLanguageRef = useRef(myLanguage);
   const mutedRef = useRef(muted);
@@ -969,11 +996,10 @@ function Meeting() {
   const panelOpenRef = useRef(panelOpen);
   const panelTabRef = useRef(panelTab);
 
-  const lastInterimEmitRef = useRef(0);
-  const lastInterimTextRef = useRef("");
-  const lastFinalSentRef = useRef("");
-  const latestSeqRef = useRef({});
-  const finalAbortRef = useRef({});
+  // Per-speaker translation coordination (interim never aborts final sentences!)
+  const latestFinalSeqRef = useRef({});
+  const latestInterimSeqRef = useRef({});
+  const interimAbortRef = useRef({});
   const interimPauseTimersRef = useRef({});
   const subtitleTimersRef = useRef({});
   const selfCaptionTimerRef = useRef(null);
@@ -997,20 +1023,32 @@ function Meeting() {
     }
     subtitleTimersRef.current[socketId] = setTimeout(() => {
       setSubtitles((prev) => ({ ...prev, [socketId]: null }));
-    }, payload.isLive ? 5500 : 8500);
+    }, payload.isLive ? 6000 : 9000);
   }, []);
 
   const appendTranscript = useCallback((entry) => {
     setTranscriptHistory((prev) => {
+      // Avoid accidental duplicate adjacent transcript entries
+      const last = prev[prev.length - 1];
+      if (
+        last &&
+        last.speaker === entry.speaker &&
+        last.original.toLowerCase() === entry.original.toLowerCase() &&
+        Date.now() - last.time < 3000
+      ) {
+        return prev;
+      }
       const next = [...prev, { id: `${Date.now()}-${Math.random()}`, time: Date.now(), ...entry }];
-      return next.length > 80 ? next.slice(-80) : next;
+      return next.length > 100 ? next.slice(-100) : next;
     });
   }, []);
 
-  // Translate incoming peer captions cleanly without spamming or aborting final sentences
+  // ==========================================
+  // Incoming Subtitle Translator (Never Drops Long or Follow-Up Sentences)
+  // ==========================================
   const handleIncomingSubtitle = useCallback(
     async (socketId, text, sourceLang, isInterim, senderName) => {
-      const cleanText = (text || "").trim();
+      const cleanText = (text || "").replace(/\s+/g, " ").trim();
       if (!cleanText) return;
 
       const targetLang = myLanguageRef.current;
@@ -1021,16 +1059,9 @@ function Meeting() {
         peersRef.current.find((p) => p.peerId === socketId)?.name ||
         "Participant";
 
-      const seq = (latestSeqRef.current[socketId] || 0) + 1;
-      latestSeqRef.current[socketId] = seq;
-
-      if (interimPauseTimersRef.current[socketId]) {
-        clearTimeout(interimPauseTimersRef.current[socketId]);
-      }
-
       const sameLanguage = srcBase !== "auto" && srcBase === tgtBase;
 
-      // 1. Same language -> show immediately without API call
+      // 1. Same language: instant display, zero API calls
       if (sameLanguage) {
         updatePeerSubtitle(socketId, {
           original: cleanText,
@@ -1052,64 +1083,15 @@ function Meeting() {
         return;
       }
 
-      // Helper to execute the free multi-provider translation
-      const runTranslation = async (forInterim) => {
-        // Cancel only previous in-flight request of the SAME speaker when a newer translation starts
-        if (!forInterim && finalAbortRef.current[socketId]) {
-          finalAbortRef.current[socketId].abort();
-        }
-        const controller = new AbortController();
-        if (!forInterim) finalAbortRef.current[socketId] = controller;
-
-        try {
-          const result = await translateWithBestFreeAPI(
-            cleanText,
-            sourceLang,
-            targetLang,
-            controller.signal
-          );
-
-          // Prevent stale interim from overwriting newer captions
-          if (forInterim && latestSeqRef.current[socketId] !== seq) return;
-
-          const resolvedSource =
-            sourceLang || (result.detectedLang && result.detectedLang !== "auto" ? result.detectedLang : "auto");
-
-          updatePeerSubtitle(socketId, {
-            original: cleanText,
-            translated: result.text,
-            sourceLang: resolvedSource,
-            targetLang,
-            isLive: forInterim,
-            isTranslating: false,
-          });
-
-          if (!forInterim) {
-            appendTranscript({
-              speaker,
-              original: cleanText,
-              translated: result.text,
-              sourceLang: resolvedSource,
-              targetLang,
-            });
-          }
-        } catch (err) {
-          if (err?.name !== "AbortError") {
-            updatePeerSubtitle(socketId, {
-              original: cleanText,
-              translated: cleanText,
-              sourceLang: sourceLang || "auto",
-              targetLang,
-              isLive: forInterim,
-              isTranslating: false,
-            });
-          }
-        }
-      };
-
-      // 2. Interim caption: display original spoken text immediately (0ms),
-      //    then translate only if the speaker pauses 700ms (prevents 429 rate limits & broken halves)
+      // 2. Interim caption: display original text immediately, translate after 800ms pause
       if (isInterim) {
+        const interimSeq = (latestInterimSeqRef.current[socketId] || 0) + 1;
+        latestInterimSeqRef.current[socketId] = interimSeq;
+
+        if (interimPauseTimersRef.current[socketId]) {
+          clearTimeout(interimPauseTimersRef.current[socketId]);
+        }
+
         setSubtitles((prev) => {
           const prevSub = prev[socketId];
           return {
@@ -1125,25 +1107,100 @@ function Meeting() {
           };
         });
 
-        interimPauseTimersRef.current[socketId] = setTimeout(() => {
-          if (latestSeqRef.current[socketId] === seq) {
-            runTranslation(true);
+        interimPauseTimersRef.current[socketId] = setTimeout(async () => {
+          if (latestInterimSeqRef.current[socketId] !== interimSeq) return;
+
+          if (interimAbortRef.current[socketId]) {
+            interimAbortRef.current[socketId].abort();
           }
-        }, 700);
+          const controller = new AbortController();
+          interimAbortRef.current[socketId] = controller;
+
+          try {
+            const result = await translateFullText(cleanText, sourceLang, targetLang, controller.signal);
+            if (latestInterimSeqRef.current[socketId] !== interimSeq) return;
+
+            updatePeerSubtitle(socketId, {
+              original: cleanText,
+              translated: result.text,
+              sourceLang: sourceLang || result.detectedLang || "auto",
+              targetLang,
+              isLive: true,
+              isTranslating: false,
+            });
+          } catch (err) {
+            if (err?.name !== "AbortError") {
+              console.warn("Interim translation skipped:", err?.message || err);
+            }
+          }
+        }, 800);
         return;
       }
 
-      // 3. Finalized sentence: show original immediately + fetch accurate translation right away
-      updatePeerSubtitle(socketId, {
-        original: cleanText,
-        translated: "",
-        sourceLang: sourceLang || "auto",
-        targetLang,
-        isLive: false,
-        isTranslating: true,
-      });
+      // 3. Finalized sentence: NEVER aborted by interim updates; translates even very long text via chunks
+      if (interimPauseTimersRef.current[socketId]) {
+        clearTimeout(interimPauseTimersRef.current[socketId]);
+      }
+      if (interimAbortRef.current[socketId]) {
+        interimAbortRef.current[socketId].abort();
+      }
 
-      await runTranslation(false);
+      const finalSeq = (latestFinalSeqRef.current[socketId] || 0) + 1;
+      latestFinalSeqRef.current[socketId] = finalSeq;
+      // Bump interim seq so any late interim can't overwrite this final
+      latestInterimSeqRef.current[socketId] = (latestInterimSeqRef.current[socketId] || 0) + 1;
+
+      // Show original text immediately while translating
+      setSubtitles((prev) => ({
+        ...prev,
+        [socketId]: {
+          original: cleanText,
+          translated: prev[socketId]?.original === cleanText ? prev[socketId].translated : "",
+          sourceLang: sourceLang || "auto",
+          targetLang,
+          isLive: false,
+          isTranslating: true,
+        },
+      }));
+
+      try {
+        const result = await translateFullText(cleanText, sourceLang, targetLang);
+        const resolvedSource =
+          sourceLang || (result.detectedLang && result.detectedLang !== "auto" ? result.detectedLang : "auto");
+
+        // Always record finalized sentences in the bilingual transcript
+        appendTranscript({
+          speaker,
+          original: cleanText,
+          translated: result.text,
+          sourceLang: resolvedSource,
+          targetLang,
+        });
+
+        // Update on-screen caption only if this is still the newest finalized sentence
+        if (latestFinalSeqRef.current[socketId] === finalSeq) {
+          updatePeerSubtitle(socketId, {
+            original: cleanText,
+            translated: result.text,
+            sourceLang: resolvedSource,
+            targetLang,
+            isLive: false,
+            isTranslating: false,
+          });
+        }
+      } catch (err) {
+        console.warn("Final translation error:", err?.message || err);
+        if (latestFinalSeqRef.current[socketId] === finalSeq) {
+          updatePeerSubtitle(socketId, {
+            original: cleanText,
+            translated: cleanText,
+            sourceLang: sourceLang || "auto",
+            targetLang,
+            isLive: false,
+            isTranslating: false,
+          });
+        }
+      }
     },
     [appendTranscript, updatePeerSubtitle]
   );
@@ -1165,132 +1222,222 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // 1. Speech Recognition
+  // 1. Self-Healing Speech Recognition (Fixes Long-Sentence Cutoff & Stalling)
   // ==========================================
   useEffect(() => {
-    if (!hasJoined) return;
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      console.warn("Web Speech API is not supported in this browser.");
+    if (!hasJoined || muted) {
+      setMicState("idle");
+      setMyLiveCaption("");
       return;
     }
 
-    let isStopping = false;
-    let fatalError = false;
-    let restartTimer = null;
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-    recognition.lang = myLanguage;
-
-    recognition.onresult = (event) => {
-      if (mutedRef.current || !socketRef.current) return;
-
-      let interimTranscript = "";
-      let finalTranscript = "";
-
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        } else {
-          interimTranscript += event.results[i][0].transcript;
-        }
-      }
-
-      const now = Date.now();
-      const trimmedInterim = interimTranscript.trim();
-      const trimmedFinal = finalTranscript.trim();
-
-      if (
-        trimmedInterim &&
-        trimmedInterim !== lastInterimTextRef.current &&
-        now - lastInterimEmitRef.current >= 350
-      ) {
-        lastInterimEmitRef.current = now;
-        lastInterimTextRef.current = trimmedInterim;
-        setMyLiveCaption(trimmedInterim);
-
-        socketRef.current.emit("send-interim-subtitle", {
-          roomCode,
-          text: trimmedInterim,
-          sourceLang: myLanguage,
-          name: userName,
-        });
-      }
-
-      if (trimmedFinal && trimmedFinal !== lastFinalSentRef.current) {
-        lastInterimTextRef.current = "";
-        lastFinalSentRef.current = trimmedFinal;
-        setMyLiveCaption(trimmedFinal);
-
-        if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
-        selfCaptionTimerRef.current = setTimeout(() => setMyLiveCaption(""), 5000);
-
-        socketRef.current.emit("send-subtitle", {
-          roomCode,
-          text: trimmedFinal,
-          sourceLang: myLanguage,
-          name: userName,
-        });
-
-        appendTranscript({
-          speaker: `${userName} (You)`,
-          original: trimmedFinal,
-          translated: trimmedFinal,
-          sourceLang: myLanguage,
-          targetLang: myLanguage,
-        });
-
-        setTimeout(() => { lastFinalSentRef.current = ""; }, 1200);
-      }
-    };
-
-    recognition.onerror = (event) => {
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        fatalError = true;
-        console.error("Speech recognition permission denied:", event.error);
-      } else if (event.error !== "no-speech" && event.error !== "aborted") {
-        console.warn("Speech recognition error:", event.error);
-      }
-    };
-
-    recognition.onend = () => {
-      if (!isStopping && !fatalError && !mutedRef.current) {
-        restartTimer = setTimeout(() => {
-          if (!isStopping && !mutedRef.current) {
-            try { recognition.start(); } catch {}
-          }
-        }, 300);
-      }
-    };
-
-    recognitionRef.current = recognition;
-    if (!mutedRef.current) {
-      try { recognition.start(); } catch {}
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setMicState("unsupported");
+      return;
     }
+
+    let isDisposed = false;
+    let isListening = false;
+    let fatalPermissionError = false;
+    let recognition = null;
+    let restartTimer = null;
+    let pauseFlushTimer = null;
+    let watchdogTimer = null;
+
+    let lastInterimEmitAt = 0;
+    let unfinalizedInterim = "";
+    let lastEmittedFinal = "";
+    let lastEmittedFinalAt = 0;
+
+    const emitFinalSentence = (rawText) => {
+      const clean = (rawText || "").replace(/\s+/g, " ").trim();
+      if (!clean || !socketRef.current) return;
+
+      // Deduplicate identical final emitted within 2.5s (e.g., pause-flush followed by Chrome isFinal)
+      const now = Date.now();
+      if (clean.toLowerCase() === lastEmittedFinal.toLowerCase() && now - lastEmittedFinalAt < 2500) {
+        return;
+      }
+
+      lastEmittedFinal = clean;
+      lastEmittedFinalAt = now;
+      unfinalizedInterim = "";
+
+      setMyLiveCaption(clean);
+      if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
+      selfCaptionTimerRef.current = setTimeout(() => setMyLiveCaption(""), 5500);
+
+      socketRef.current.emit("send-subtitle", {
+        roomCode,
+        text: clean,
+        sourceLang: myLanguage,
+        name: userName,
+      });
+
+      appendTranscript({
+        speaker: `${userName} (You)`,
+        original: clean,
+        translated: clean,
+        sourceLang: myLanguage,
+        targetLang: myLanguage,
+      });
+    };
+
+    const scheduleRestart = (delayMs = 350) => {
+      if (isDisposed || fatalPermissionError || mutedRef.current) return;
+      if (restartTimer) clearTimeout(restartTimer);
+      setMicState("restarting");
+
+      restartTimer = setTimeout(() => {
+        if (!isDisposed && !fatalPermissionError && !mutedRef.current) {
+          startFreshRecognition();
+        }
+      }, delayMs);
+    };
+
+    const startFreshRecognition = () => {
+      if (isDisposed || fatalPermissionError || mutedRef.current) return;
+
+      // Cleanly tear down any previous wedged instance before creating a fresh one
+      if (recognition) {
+        recognition.onstart = null;
+        recognition.onresult = null;
+        recognition.onerror = null;
+        recognition.onend = null;
+        try { recognition.abort(); } catch {}
+      }
+
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.maxAlternatives = 1;
+      rec.lang = myLanguage;
+
+      rec.onstart = () => {
+        if (isDisposed) return;
+        isListening = true;
+        setMicState("listening");
+      };
+
+      rec.onresult = (event) => {
+        if (isDisposed || mutedRef.current || !socketRef.current) return;
+
+        let interimTranscript = "";
+        let finalTranscript = "";
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcript = event.results[i][0]?.transcript || "";
+          if (event.results[i].isFinal) {
+            finalTranscript += ` ${transcript}`;
+          } else {
+            interimTranscript += ` ${transcript}`;
+          }
+        }
+
+        const trimmedInterim = interimTranscript.replace(/\s+/g, " ").trim();
+        const trimmedFinal = finalTranscript.replace(/\s+/g, " ").trim();
+
+        if (trimmedInterim) {
+          unfinalizedInterim = trimmedInterim;
+          setMyLiveCaption(trimmedInterim);
+
+          const now = Date.now();
+          if (now - lastInterimEmitAt >= 400) {
+            lastInterimEmitAt = now;
+            socketRef.current.emit("send-interim-subtitle", {
+              roomCode,
+              text: trimmedInterim,
+              sourceLang: myLanguage,
+              name: userName,
+            });
+          }
+
+          // If Chrome delays isFinal on a long sentence, flush automatically after a 1.1s pause
+          if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
+          pauseFlushTimer = setTimeout(() => {
+            if (unfinalizedInterim) {
+              const toFlush = unfinalizedInterim;
+              emitFinalSentence(toFlush);
+              // For very long utterances (>180 chars), cycle recognition cleanly so Chrome's buffer stays fresh
+              if (toFlush.length > 180) {
+                try { rec.stop(); } catch {}
+              }
+            }
+          }, 1100);
+        }
+
+        if (trimmedFinal) {
+          if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
+          emitFinalSentence(trimmedFinal);
+        }
+      };
+
+      rec.onerror = (event) => {
+        if (isDisposed) return;
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          fatalPermissionError = true;
+          isListening = false;
+          setMicState("idle");
+          console.error("Speech recognition permission denied:", event.error);
+          return;
+        }
+        // On network/audio-capture glitches, recover cleanly after a short delay
+        if (event.error === "network" || event.error === "audio-capture") {
+          isListening = false;
+          scheduleRestart(1000);
+        }
+      };
+
+      rec.onend = () => {
+        isListening = false;
+        if (isDisposed) return;
+
+        // CRITICAL FIX: Chrome often cuts off long sentences via onend WITHOUT emitting isFinal.
+        // Flush any unfinalized long sentence here so it NEVER gets lost!
+        if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
+        if (unfinalizedInterim) {
+          emitFinalSentence(unfinalizedInterim);
+        }
+
+        if (!fatalPermissionError && !mutedRef.current) {
+          scheduleRestart(300);
+        }
+      };
+
+      recognition = rec;
+      try {
+        rec.start();
+      } catch {
+        // Retry instead of dying permanently on InvalidStateError
+        scheduleRestart(650);
+      }
+    };
+
+    startFreshRecognition();
+
+    // Watchdog: guarantees speech recognition never stays permanently dead after a long utterance
+    watchdogTimer = setInterval(() => {
+      if (!isDisposed && !fatalPermissionError && !mutedRef.current && !isListening && !restartTimer) {
+        startFreshRecognition();
+      }
+    }, 3000);
 
     return () => {
-      isStopping = true;
+      isDisposed = true;
       if (restartTimer) clearTimeout(restartTimer);
+      if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
+      if (watchdogTimer) clearInterval(watchdogTimer);
       if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
-      try { recognition.stop(); } catch {}
-      recognitionRef.current = null;
+      if (recognition) {
+        recognition.onstart = null;
+        recognition.onresult = null;
+        recognition.onerror = null;
+        recognition.onend = null;
+        try { recognition.abort(); } catch {}
+      }
     };
-  }, [hasJoined, myLanguage, roomCode, userName, appendTranscript]);
-
-  useEffect(() => {
-    const rec = recognitionRef.current;
-    if (!rec || !hasJoined) return;
-    if (muted) {
-      setMyLiveCaption("");
-      try { rec.stop(); } catch {}
-    } else {
-      try { rec.start(); } catch {}
-    }
-  }, [muted, hasJoined]);
+  }, [hasJoined, muted, myLanguage, roomCode, userName, appendTranscript]);
 
   // ==========================================
   // 2. Core WebRTC & Socket Connection
@@ -1317,7 +1464,6 @@ function Meeting() {
           return;
         }
 
-        // Apply pre-join lobby mute/camera preferences immediately
         const audioTrack = stream.getAudioTracks()[0];
         if (audioTrack) audioTrack.enabled = !mutedRef.current;
         const videoTrack = stream.getVideoTracks()[0];
@@ -1422,9 +1568,9 @@ function Meeting() {
           peersRef.current = peersRef.current.filter((p) => p.peerId !== socketId);
           setPeers([...peersRef.current]);
 
-          if (finalAbortRef.current[socketId]) {
-            finalAbortRef.current[socketId].abort();
-            delete finalAbortRef.current[socketId];
+          if (interimAbortRef.current[socketId]) {
+            interimAbortRef.current[socketId].abort();
+            delete interimAbortRef.current[socketId];
           }
           if (interimPauseTimersRef.current[socketId]) {
             clearTimeout(interimPauseTimersRef.current[socketId]);
@@ -1480,8 +1626,8 @@ function Meeting() {
       });
       peersRef.current = [];
       setPeers([]);
-      Object.values(finalAbortRef.current).forEach((c) => c.abort());
-      finalAbortRef.current = {};
+      Object.values(interimAbortRef.current).forEach((c) => c.abort());
+      interimAbortRef.current = {};
       Object.values(interimPauseTimersRef.current).forEach(clearTimeout);
       Object.values(subtitleTimersRef.current).forEach(clearTimeout);
     };
@@ -1590,19 +1736,22 @@ function Meeting() {
         <style>{MEETING_STYLES}</style>
         <div className="lobby-shell">
           <div className="lobby-card">
-            <div className="lobby-brand">
+            <div className="lobby-logo">
               <CamOnIcon />
             </div>
-            <h1 className="lobby-title">Join Chalfal Meeting</h1>
+            <h1 className="lobby-title">Ready to join?</h1>
             <p className="lobby-sub">
-              Room <span className="room-chip">{roomCode}</span>
+              Room:{" "}
+              <strong style={{ color: "#ffb703", fontFamily: "monospace" }}>
+                {roomCode}
+              </strong>
             </p>
 
             <div className={`lobby-status ${serverStatus === "waking" ? "warn" : "ok"}`}>
               <span className="status-dot" />
               {serverStatus === "waking"
-                ? "Waking server..."
-                : "Server ready • Dual-language captions active"}
+                ? "Waking Server..."
+                : "Server Ready • Live Dual-Language Translation"}
             </div>
 
             <div className="lobby-toggles">
@@ -1627,11 +1776,11 @@ function Meeting() {
             <form onSubmit={(e) => { e.preventDefault(); setHasJoined(true); }}>
               <div className="form-group">
                 <label>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "7px" }}>
-                    <TranslateIcon /> Your Language
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                    <TranslateIcon /> Select your language
                   </span>
                   <span className="form-hint">
-                    You will see both what others speak and its live translation in your language.
+                    Displays both the speaker's original language and live translation in your language.
                   </span>
                 </label>
                 <select
@@ -1647,18 +1796,17 @@ function Meeting() {
                   ))}
                 </select>
               </div>
-
               <button type="submit" className="btn-join">
-                Enter Meeting Room
+                Join Meeting
               </button>
             </form>
 
-            <div style={{ marginTop: "18px" }}>
+            <div style={{ marginTop: "20px" }}>
               <Link
                 to="/dashboard"
-                style={{ color: "var(--text-muted)", fontSize: "0.86rem", textDecoration: "none" }}
+                style={{ color: "var(--text-muted)", fontSize: "0.9rem", textDecoration: "none" }}
               >
-                ← Back to Dashboard
+                ← Cancel and return to dashboard
               </Link>
             </div>
           </div>
@@ -1677,18 +1825,14 @@ function Meeting() {
       <header className="meet-topbar">
         <div className="topbar-left">
           <Link to="/dashboard" className="logo">
-            <span className="logo-badge">
+            <span className="logo-icon">
               <CamOnIcon />
             </span>
             Chalfal
           </Link>
-          <button className="room-code-btn" onClick={handleCopyRoom} title="Copy room code">
-            <CopyIcon />
-            {copiedCode ? "Copied!" : <span style={{ fontFamily: "monospace" }}>{roomCode}</span>}
-          </button>
         </div>
 
-        <div className="lang-pill">
+        <div className="lang-control">
           <TranslateIcon />
           <select
             className="lang-select-inline"
@@ -1702,16 +1846,34 @@ function Meeting() {
               </option>
             ))}
           </select>
-          <span className={`live-badge ${serverStatus === "connected" ? "ok" : "warn"}`}>
+          <span
+            className={`live-pill ${
+              serverStatus === "connected" && micState !== "unsupported" ? "ok" : "warn"
+            }`}
+          >
             <span className="status-dot" style={{ width: 6, height: 6 }} />
-            {serverStatus === "connected" ? "Live Translate" : "Connecting"}
+            {serverStatus !== "connected"
+              ? "Connecting..."
+              : micState === "unsupported"
+              ? "No Speech API"
+              : muted
+              ? "Mic Muted"
+              : micState === "listening"
+              ? "Live Translate"
+              : "Syncing Mic..."}
           </span>
         </div>
 
-        <div className="participant-pill" title="Participants in room">
-          <UsersIcon />
-          {peers.length + 1}
-        </div>
+        <button className="room-code" onClick={handleCopyRoom} title="Click to copy room code">
+          <CopyIcon />
+          {copiedCode ? (
+            "Copied!"
+          ) : (
+            <>
+              Room: <span style={{ fontFamily: "monospace" }}>{roomCode}</span>
+            </>
+          )}
+        </button>
       </header>
 
       <main className="meet-body">
@@ -1770,47 +1932,47 @@ function Meeting() {
               <button
                 className={`tb-btn${muted ? " off" : ""}`}
                 onClick={toggleMute}
-                title={muted ? "Unmute microphone" : "Mute microphone"}
+                title={muted ? "Unmute" : "Mute"}
               >
                 {muted ? <MicOffIcon /> : <MicOnIcon />}
               </button>
               <button
                 className={`tb-btn${videoOff ? " off" : ""}`}
                 onClick={toggleVideo}
-                title={videoOff ? "Turn camera on" : "Turn camera off"}
+                title={videoOff ? "Turn Camera On" : "Turn Camera Off"}
               >
                 {videoOff ? <CamOffIcon /> : <CamOnIcon />}
               </button>
               <button
-                className={`tb-btn${screenSharing ? " active-accent" : ""}`}
+                className={`tb-btn${screenSharing ? " active-amber" : ""}`}
                 onClick={toggleScreenShare}
-                title={screenSharing ? "Stop sharing screen" : "Share screen"}
+                title={screenSharing ? "Stop Screen Share" : "Share Screen"}
               >
                 <ScreenIcon />
               </button>
               <button
-                className={`tb-btn${captionsEnabled ? " active-accent" : ""}`}
+                className={`tb-btn${captionsEnabled ? " active-amber" : ""}`}
                 onClick={() => setCaptionsEnabled((c) => !c)}
-                title={captionsEnabled ? "Hide live captions" : "Show live captions"}
+                title={captionsEnabled ? "Hide Subtitles" : "Show Subtitles"}
               >
                 <CaptionsIcon />
               </button>
               <button
-                className={`tb-btn${panelOpen && panelTab === "transcript" ? " active-accent" : ""}`}
+                className={`tb-btn${panelOpen && panelTab === "transcript" ? " active-amber" : ""}`}
                 onClick={() => handleOpenPanel("transcript")}
-                title="Live bilingual transcript"
+                title="Bilingual Transcript"
               >
                 <TranslateIcon />
               </button>
               <button
-                className={`tb-btn${panelOpen && panelTab === "chat" ? " active-accent" : ""}`}
+                className={`tb-btn${panelOpen && panelTab === "chat" ? " active-amber" : ""}`}
                 onClick={() => handleOpenPanel("chat")}
-                title="In-call chat"
+                title="In-Call Chat"
               >
                 <ChatIcon />
                 {unreadChat && <span className="unread-dot" />}
               </button>
-              <button className="tb-btn end" onClick={handleEndCall} title="Leave call">
+              <button className="tb-btn end" onClick={handleEndCall} title="Leave Call">
                 <EndIcon />
               </button>
             </div>
@@ -1874,7 +2036,7 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
               <span>{subtitle.original}</span>
             </div>
 
-            {/* Row 2: Translated Text in Listener's Language */}
+            {/* Row 2: Translated Text in Your Language */}
             {showTranslationRow && (
               <div
                 className={`caption-row translated${
@@ -1882,9 +2044,7 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
                 }`}
               >
                 <span className="lang-tag tgt">{getLangName(subtitle.targetLang)}</span>
-                <span>
-                  {subtitle.translated || "Translating..."}
-                </span>
+                <span>{subtitle.translated || "Translating..."}</span>
               </div>
             )}
           </div>
@@ -1939,7 +2099,7 @@ const SidePanel = memo(function SidePanel({
         <div className="panel-list">
           {transcriptHistory.length === 0 && (
             <div className="empty-state">
-              Spoken sentences and their translations will appear here in real time.
+              Both spoken sentences and their translations will be logged here live.
             </div>
           )}
           {transcriptHistory.map((item) => {
@@ -1949,10 +2109,10 @@ const SidePanel = memo(function SidePanel({
               getBaseLang(item.sourceLang) !== getBaseLang(item.targetLang);
 
             return (
-              <div className="transcript-item" key={item.id}>
-                <div className="bubble-meta">
-                  <span className="bubble-name">{item.speaker}</span>
-                  <span className="bubble-time">
+              <div className="transcript-card" key={item.id}>
+                <div className="card-meta">
+                  <span className="cm-name">{item.speaker}</span>
+                  <span className="cm-time">
                     {new Date(item.time).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -1978,20 +2138,20 @@ const SidePanel = memo(function SidePanel({
         <>
           <div className="panel-list">
             {messages.length === 0 && (
-              <div className="empty-state">No messages yet. Say hello to the room.</div>
+              <div className="empty-state">No messages yet.</div>
             )}
             {messages.map((m, i) => (
-              <div className="chat-bubble" key={i}>
-                <div className="bubble-meta">
-                  <span className="bubble-name">{m.name}</span>
-                  <span className="bubble-time">
+              <div className="chat-card" key={i}>
+                <div className="card-meta">
+                  <span className="cm-name">{m.name}</span>
+                  <span className="cm-time">
                     {new Date(m.time).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </span>
                 </div>
-                <div>{m.message}</div>
+                <div className="chat-body">{m.message}</div>
               </div>
             ))}
             <div ref={endRef} />
@@ -1999,7 +2159,7 @@ const SidePanel = memo(function SidePanel({
           <form className="chat-input-row" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Send a message..."
+              placeholder="Type a message..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
