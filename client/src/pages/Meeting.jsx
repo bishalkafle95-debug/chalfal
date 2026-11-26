@@ -34,21 +34,19 @@ const SUPPORTED_LANGUAGES = [
   { code: "en-US", short: "EN", name: "English" },
   { code: "ne-NP", short: "NE", name: "Nepali" },
   { code: "hi-IN", short: "HI", name: "Hindi" },
-  { code: "es-ES", short: "ES", name: "Spanish" },
-  { code: "fr-FR", short: "FR", name: "French" },
 ];
 
 // --- Icons ---
-const MicOnIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const MicOnIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
     <line x1="12" y1="19" x2="12" y2="23" />
     <line x1="8" y1="23" x2="16" y2="23" />
   </svg>
 );
-const MicOffIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const MicOffIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="1" y1="1" x2="23" y2="23" />
     <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
     <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
@@ -57,36 +55,36 @@ const MicOffIcon = () => (
   </svg>
 );
 const CamOnIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polygon points="23 7 16 12 23 17 23 7" />
     <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
   </svg>
 );
 const CamOffIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" />
     <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
 const ScreenIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
     <path d="M8 21h8M12 17v4" />
   </svg>
 );
 const ChatIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
   </svg>
 );
 const CaptionsIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <path d="M7 15h4M15 15h2M7 11h2M13 11h4" />
   </svg>
 );
 const EndIcon = () => (
-  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
   </svg>
 );
@@ -108,20 +106,21 @@ const CopyIcon = () => (
 );
 
 // ==========================================
-// Robust Free Translation Engine (Chunked + Timeout + Multi-Provider)
+// Accurate Free Translation Engine (EN / NE / HI)
 // ==========================================
 const translationCache = new Map();
-const providerCooldown = new Map(); // Temporarily skip failed/rate-limited providers
+const providerCooldown = new Map();
 
 const getBaseLang = (code) => {
   if (!code || typeof code !== "string") return "auto";
-  return code.toLowerCase().split("-")[0];
+  const base = code.toLowerCase().split("-")[0];
+  return ["en", "ne", "hi"].includes(base) ? base : "auto";
 };
 
 const getLangName = (code) => {
   const base = getBaseLang(code);
   const match = SUPPORTED_LANGUAGES.find((l) => getBaseLang(l.code) === base);
-  return match ? match.name : base === "auto" ? "Auto" : base.toUpperCase();
+  return match ? match.name : "Auto";
 };
 
 const getInitials = (name = "G") =>
@@ -132,12 +131,37 @@ const getInitials = (name = "G") =>
     .map((p) => p[0]?.toUpperCase() || "")
     .join("") || "G";
 
+// Heuristic distinction between Nepali and Hindi when Devanagari arrives without explicit sourceLang
+const NEPALI_MARKERS = /(तपाईं|तिमी|छु|छौ|छन्|छैन|होइन|गर्छु|गर्नु|पनि|कस्तो|के\s|कहाँ|किन|हामी|मेरो|तिम्रो|तपाईंको|लाई|बाट|मा\s)/;
+const HINDI_MARKERS = /(आप|तुम|मैं|है\b|हैं|नहीं|कैसे|क्या|कहाँ|क्यों|हम|मेरा|तुम्हारा|आपका|करता|करती|और|भी|से\s|में\s)/;
+
+function detectEffectiveSource(text, declaredSourceLang, targetLang) {
+  const declared = getBaseLang(declaredSourceLang);
+  const tgt = getBaseLang(targetLang);
+  const hasDevanagari = /[\u0900-\u097F]/.test(text);
+
+  if (hasDevanagari) {
+    if (declared === "ne" || declared === "hi") return declared;
+    const neHits = (text.match(new RegExp(NEPALI_MARKERS, "g")) || []).length;
+    const hiHits = (text.match(new RegExp(HINDI_MARKERS, "g")) || []).length;
+    if (neHits > hiHits) return "ne";
+    if (hiHits > neHits) return "hi";
+    // If listener is Hindi, Devanagari is likely Nepali; otherwise default to auto
+    return tgt === "hi" ? "ne" : tgt === "ne" ? "hi" : "auto";
+  }
+
+  // Pure Latin script: if speaker declared EN or spoke English words while set to NE/HI
+  if (/[a-zA-Z]/.test(text)) {
+    return declared === "en" ? "en" : "auto";
+  }
+
+  return declared;
+}
+
 const QUESTION_STARTERS = {
   en: /^(what|what's|where|where's|when|why|who|who's|whom|whose|which|how|how's|is|are|am|was|were|do|does|did|can|could|will|would|shall|should|have|has|had)\b/i,
   ne: /^(के|कहाँ|कहिले|किन|को|कस्तो|कति|कसरी|कुन)/,
   hi: /^(क्या|कहाँ|कब|क्यों|कौन|कैसा|कैसी|कैसे|कितना|कितने|किस)/,
-  es: /^(qué|dónde|cuándo|por qué|quién|cómo|cuál|cuánto)/i,
-  fr: /^(que|quoi|où|quand|pourquoi|qui|comment|quel|quelle|est-ce)/i,
 };
 
 const EN_CONTRACTIONS = [
@@ -156,25 +180,21 @@ const EN_CONTRACTIONS = [
   [/\bthats\b/gi, "that's"],
 ];
 
-function normalizeSpeechText(text, sourceLang) {
+function normalizeSpeechText(text, srcBase) {
   let clean = (text || "").replace(/\s+/g, " ").trim();
   if (!clean) return "";
 
-  const base = getBaseLang(sourceLang);
   const hasDevanagari = /[\u0900-\u097F]/.test(clean);
 
-  if (base === "en" || (!hasDevanagari && base === "auto")) {
+  if (!hasDevanagari) {
     for (const [pattern, replacement] of EN_CONTRACTIONS) {
       clean = clean.replace(pattern, replacement);
     }
-  }
-
-  if (!hasDevanagari) {
     clean = clean.charAt(0).toUpperCase() + clean.slice(1);
   }
 
   if (!/[.?!।]$/.test(clean)) {
-    const qRegex = QUESTION_STARTERS[base];
+    const qRegex = QUESTION_STARTERS[srcBase];
     if (qRegex && qRegex.test(clean)) {
       clean += "?";
     }
@@ -182,23 +202,12 @@ function normalizeSpeechText(text, sourceLang) {
   return clean;
 }
 
-function resolveSourceParam(text, sourceLang) {
-  const base = getBaseLang(sourceLang);
-  if (base === "auto") return "auto";
-  // If user selected Nepali/Hindi but Web Speech transcribed English/Latin words, auto-detect
-  if ((base === "ne" || base === "hi") && !/[\u0900-\u097F]/.test(text)) {
-    return "auto";
-  }
-  return base;
-}
-
-// Splits long speech into natural chunks <= 150 chars so URL-based free APIs NEVER fail on long sentences
-function splitIntoChunks(text, maxChars = 150) {
+// Keep full sentences intact up to 350 chars for natural NMT accuracy; split only very long speech
+function splitIntoChunks(text, maxChars = 350) {
   const clean = (text || "").replace(/\s+/g, " ").trim();
   if (clean.length <= maxChars) return [clean];
 
   const chunks = [];
-  // First split on sentence punctuation while keeping punctuation attached
   const sentences = clean.split(/(?<=[.?!।])\s+/);
 
   for (const sentence of sentences) {
@@ -207,17 +216,35 @@ function splitIntoChunks(text, maxChars = 150) {
       continue;
     }
 
-    // Split long unpunctuated speech on clauses or words
-    const words = sentence.split(/\s+/);
+    // Try splitting on natural clause boundaries before falling back to word boundaries
+    const clauses = sentence.split(/(?<=,|;)\s+|\s+(?=(?:and|but|because|so|or|तर|अनि|किनभने|और|लेकिन|क्योंकि)\s)/i);
     let current = "";
 
-    for (const word of words) {
-      const candidate = current ? `${current} ${word}` : word;
+    for (const clause of clauses) {
+      if (clause.length > maxChars) {
+        if (current) {
+          chunks.push(current);
+          current = "";
+        }
+        const words = clause.split(/\s+/);
+        for (const w of words) {
+          const cand = current ? `${current} ${w}` : w;
+          if (cand.length <= maxChars) {
+            current = cand;
+          } else {
+            if (current) chunks.push(current);
+            current = w.slice(0, maxChars);
+          }
+        }
+        continue;
+      }
+
+      const candidate = current ? `${current} ${clause}` : clause;
       if (candidate.length <= maxChars) {
         current = candidate;
       } else {
         if (current) chunks.push(current);
-        current = word.length > maxChars ? word.slice(0, maxChars) : word;
+        current = clause;
       }
     }
     if (current) chunks.push(current);
@@ -226,8 +253,7 @@ function splitIntoChunks(text, maxChars = 150) {
   return chunks.filter(Boolean);
 }
 
-// Fetch with hard timeout + optional external AbortSignal so a slow provider never stalls translation
-async function fetchWithTimeout(url, externalSignal, timeoutMs = 4500) {
+async function fetchWithTimeout(url, externalSignal, timeoutMs = 5000) {
   const controller = new AbortController();
   const onExternalAbort = () => controller.abort();
 
@@ -250,8 +276,67 @@ async function fetchWithTimeout(url, externalSignal, timeoutMs = 4500) {
   }
 }
 
-const isProviderCoolingDown = (name) => (providerCooldown.get(name) || 0) > Date.now();
-const markProviderCooldown = (name, ms = 45000) => providerCooldown.set(name, Date.now() + ms);
+const isCoolingDown = (key) => (providerCooldown.get(key) || 0) > Date.now();
+const setCooldown = (key, ms = 35000) => providerCooldown.set(key, Date.now() + ms);
+
+const isSameIgnoringCase = (a = "", b = "") =>
+  a.replace(/[.?!।\s]+/g, " ").trim().toLowerCase() ===
+  b.replace(/[.?!।\s]+/g, " ").trim().toLowerCase();
+
+async function callGoogleGtx(chunk, sl, tl, signal) {
+  const url =
+    `https://translate.googleapis.com/translate_a/single?client=gtx` +
+    `&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}` +
+    `&dt=t&q=${encodeURIComponent(chunk)}`;
+
+  const res = await fetchWithTimeout(url, signal, 5000);
+  if (res.status === 429) {
+    setCooldown("gtx", 30000);
+    return null;
+  }
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  if (!Array.isArray(data?.[0])) return null;
+
+  const translated = data[0]
+    .map((seg) => (Array.isArray(seg) && typeof seg[0] === "string" ? seg[0] : ""))
+    .join("")
+    .trim();
+  const detectedLang = typeof data?.[2] === "string" ? data[2] : sl;
+  return translated ? { text: translated, detectedLang, ok: true } : null;
+}
+
+async function callGoogleDict(chunk, sl, tl, signal) {
+  const url =
+    `https://translate.googleapis.com/translate_a/single?client=dict-chrome-ex` +
+    `&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}` +
+    `&dt=t&q=${encodeURIComponent(chunk)}`;
+
+  const res = await fetchWithTimeout(url, signal, 5000);
+  if (res.status === 429) {
+    setCooldown("dict", 30000);
+    return null;
+  }
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  let translated = "";
+  let detectedLang = sl;
+
+  if (Array.isArray(data?.sentences)) {
+    translated = data.sentences.map((s) => s?.trans || "").join("").trim();
+    if (typeof data?.src === "string") detectedLang = data.src;
+  } else if (Array.isArray(data?.[0])) {
+    translated = data[0]
+      .map((seg) => (Array.isArray(seg) && typeof seg[0] === "string" ? seg[0] : ""))
+      .join("")
+      .trim();
+    if (typeof data?.[2] === "string") detectedLang = data[2];
+  }
+
+  return translated ? { text: translated, detectedLang, ok: true } : null;
+}
 
 async function translateSingleChunk(chunk, src, tgt, signal) {
   const cacheKey = `${src}:${tgt}:${chunk.toLowerCase()}`;
@@ -259,109 +344,67 @@ async function translateSingleChunk(chunk, src, tgt, signal) {
     return translationCache.get(cacheKey);
   }
 
-  const saveCache = (result) => {
-    if (translationCache.size > 1200) translationCache.clear();
-    translationCache.set(cacheKey, result);
-    return result;
+  const saveAndReturn = (res) => {
+    if (res?.ok) {
+      if (translationCache.size > 1200) translationCache.clear();
+      translationCache.set(cacheKey, res);
+    }
+    return res;
   };
 
-  // Provider 1: Google Translate GTX (Primary - Best accuracy for EN/NE/HI/ES/FR)
-  if (!isProviderCoolingDown("gtx")) {
+  // 1. Primary: Google Translate GTX (CORS-enabled, highest accuracy for EN / NE / HI)
+  if (!isCoolingDown("gtx")) {
     try {
-      const url =
-        `https://translate.googleapis.com/translate_a/single?client=gtx` +
-        `&sl=${encodeURIComponent(src)}&tl=${encodeURIComponent(tgt)}` +
-        `&dt=t&q=${encodeURIComponent(chunk)}`;
-
-      const res = await fetchWithTimeout(url, signal, 4500);
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data?.[0])) {
-          const translated = data[0]
-            .map((seg) => (Array.isArray(seg) ? seg[0] : ""))
-            .join("")
-            .trim();
-          const detectedLang = typeof data?.[2] === "string" ? data[2] : src;
-          if (translated) return saveCache({ text: translated, detectedLang });
+      let res = await callGoogleGtx(chunk, src, tgt, signal);
+      // If explicit sl returned exact same text, retry once with sl=auto (handles mixed-language speech)
+      if (res && isSameIgnoringCase(res.text, chunk) && src !== "auto") {
+        const autoRes = await callGoogleGtx(chunk, "auto", tgt, signal);
+        if (autoRes && !isSameIgnoringCase(autoRes.text, chunk)) {
+          res = autoRes;
         }
-      } else if (res.status === 429) {
-        markProviderCooldown("gtx", 30000);
       }
+      if (res) return saveAndReturn(res);
     } catch (err) {
       if (signal?.aborted) throw err;
     }
   }
 
-  // Provider 2: Google Chrome Extension endpoint (Same Google NMT quality, separate rate-limit pool)
-  if (!isProviderCoolingDown("clients5")) {
+  // 2. Backup Google endpoint on CORS-enabled translate.googleapis.com
+  if (!isCoolingDown("dict")) {
     try {
-      const url =
-        `https://clients5.google.com/translate_a/t?client=dict-chrome-ex` +
-        `&sl=${encodeURIComponent(src)}&tl=${encodeURIComponent(tgt)}` +
-        `&q=${encodeURIComponent(chunk)}`;
+      const res = await callGoogleDict(chunk, src, tgt, signal);
+      if (res) return saveAndReturn(res);
+    } catch (err) {
+      if (signal?.aborted) throw err;
+    }
+  }
 
-      const res = await fetchWithTimeout(url, signal, 4500);
-      if (res.ok) {
-        const data = await res.json();
-        let translated = "";
-        let detectedLang = src;
-
-        if (Array.isArray(data)) {
-          if (typeof data[0] === "string") {
-            translated = data[0].trim();
-          } else if (Array.isArray(data[0]) && typeof data[0][0] === "string") {
-            translated = data[0][0].trim();
-            if (typeof data[0][1] === "string") detectedLang = data[0][1];
-          }
+  // 3. Fallback: MyMemory API (CORS-enabled, requires explicit 2-letter source code)
+  if (!isCoolingDown("mymemory")) {
+    try {
+      let mmSrc = src;
+      if (mmSrc === "auto") {
+        if (/[\u0900-\u097F]/.test(chunk)) {
+          mmSrc = tgt === "hi" ? "ne" : "hi";
+        } else {
+          mmSrc = "en";
         }
-        if (translated) return saveCache({ text: translated, detectedLang });
-      } else if (res.status === 429) {
-        markProviderCooldown("clients5", 30000);
       }
-    } catch (err) {
-      if (signal?.aborted) throw err;
-    }
-  }
 
-  // Provider 3: Lingva Translate (Open-source Google Translate proxy; sanitize slashes for URL path)
-  const lingvaHosts = ["https://lingva.ml/api/v1", "https://lingva.lunar.icu/api/v1"];
-  for (const host of lingvaHosts) {
-    if (isProviderCoolingDown(host)) continue;
-    try {
-      const pathSafe = chunk.replace(/\//g, " ");
-      const url = `${host}/${encodeURIComponent(src)}/${encodeURIComponent(tgt)}/${encodeURIComponent(pathSafe)}`;
-      const res = await fetchWithTimeout(url, signal, 4000);
-      if (res.ok) {
-        const data = await res.json();
-        const translated = (data?.translation || "").trim();
-        if (translated) return saveCache({ text: translated, detectedLang: src });
-      } else {
-        markProviderCooldown(host, 60000);
-      }
-    } catch (err) {
-      if (signal?.aborted) throw err;
-      markProviderCooldown(host, 60000);
-    }
-  }
-
-  // Provider 4: MyMemory (Filtered so warning text never appears)
-  if (!isProviderCoolingDown("mymemory")) {
-    try {
-      const mmSrc = src === "auto" ? "en" : src;
       if (mmSrc !== tgt) {
         const url =
           `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}` +
           `&langpair=${encodeURIComponent(`${mmSrc}|${tgt}`)}`;
-        const res = await fetchWithTimeout(url, signal, 4500);
-        if (res.ok) {
+        const res = await fetchWithTimeout(url, signal, 5000);
+        if (res.status === 429) {
+          setCooldown("mymemory", 60000);
+        } else if (res.ok) {
           const data = await res.json();
           const translated = (data?.responseData?.translatedText || "").trim();
-          const isWarning = /MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(translated);
+          const isWarning = /MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID LANGUAGE/i.test(translated);
           if (data?.responseStatus === 200 && translated && !isWarning) {
-            return saveCache({ text: translated, detectedLang: mmSrc });
+            return saveAndReturn({ text: translated, detectedLang: mmSrc, ok: true });
           }
-        } else if (res.status === 429) {
-          markProviderCooldown("mymemory", 60000);
         }
       }
     } catch (err) {
@@ -369,42 +412,79 @@ async function translateSingleChunk(chunk, src, tgt, signal) {
     }
   }
 
-  return { text: chunk, detectedLang: src };
-}
-
-async function translateFullText(text, sourceLang, targetLang, signal) {
-  const raw = (text || "").trim();
-  const tgt = getBaseLang(targetLang);
-  if (!raw || tgt === "auto") return { text: raw, detectedLang: getBaseLang(sourceLang) };
-
-  const src = resolveSourceParam(raw, sourceLang);
-  if (src !== "auto" && src === tgt) {
-    return { text: raw, detectedLang: src };
+  // 4. Last resort: Lingva Translate proxy
+  if (!isCoolingDown("lingva")) {
+    try {
+      const pathSafe = chunk.replace(/\//g, " ");
+      const url = `https://lingva.ml/api/v1/${encodeURIComponent(src)}/${encodeURIComponent(tgt)}/${encodeURIComponent(pathSafe)}`;
+      const res = await fetchWithTimeout(url, signal, 4000);
+      if (res.ok) {
+        const data = await res.json();
+        const translated = (data?.translation || "").trim();
+        if (translated) {
+          return saveAndReturn({ text: translated, detectedLang: src, ok: true });
+        }
+      } else {
+        setCooldown("lingva", 60000);
+      }
+    } catch (err) {
+      if (signal?.aborted) throw err;
+      setCooldown("lingva", 60000);
+    }
   }
 
-  const prepared = normalizeSpeechText(raw, sourceLang);
+  // IMPORTANT: Never cache a failed translation!
+  return { text: "", detectedLang: src, ok: false };
+}
+
+async function translateFullText(text, declaredSourceLang, targetLang, signal) {
+  const raw = (text || "").replace(/\s+/g, " ").trim();
+  const tgt = getBaseLang(targetLang);
+  if (!raw || tgt === "auto") {
+    return { text: raw, detectedLang: getBaseLang(declaredSourceLang), ok: true };
+  }
+
+  const src = detectEffectiveSource(raw, declaredSourceLang, targetLang);
+  if (src !== "auto" && src === tgt) {
+    return { text: raw, detectedLang: src, ok: true };
+  }
+
+  const prepared = normalizeSpeechText(raw, src);
   const fullCacheKey = `FULL:${src}:${tgt}:${prepared.toLowerCase()}`;
   if (translationCache.has(fullCacheKey)) {
     return translationCache.get(fullCacheKey);
   }
 
-  // Chunk long sentences cleanly and translate chunks in parallel
-  const chunks = splitIntoChunks(prepared, 150);
-  const translatedChunks = await Promise.all(
+  const chunks = splitIntoChunks(prepared, 350);
+  const chunkResults = await Promise.all(
     chunks.map((c) => translateSingleChunk(c, src, tgt, signal))
   );
 
-  const combinedText = translatedChunks.map((r) => r.text).join(" ").replace(/\s+/g, " ").trim();
-  const detectedLang = translatedChunks[0]?.detectedLang || src;
-  const finalResult = { text: combinedText || raw, detectedLang };
+  const anySucceeded = chunkResults.some((r) => r.ok && r.text);
+  const allSucceeded = chunkResults.every((r) => r.ok && r.text);
+  const combinedText = chunkResults
+    .map((r, i) => (r.ok && r.text ? r.text : chunks[i]))
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
 
-  if (translationCache.size > 1200) translationCache.clear();
-  translationCache.set(fullCacheKey, finalResult);
-  return finalResult;
+  const detectedLang = chunkResults.find((r) => r.detectedLang && r.detectedLang !== "auto")?.detectedLang || src;
+  const result = {
+    text: anySucceeded ? combinedText : "",
+    detectedLang,
+    ok: anySucceeded,
+  };
+
+  if (allSucceeded) {
+    if (translationCache.size > 1200) translationCache.clear();
+    translationCache.set(fullCacheKey, result);
+  }
+
+  return result;
 }
 
 // ==========================================
-// Original Chalfal Theme Colors — Modernized Layout
+// Original Chalfal Theme Colors + Compact Below-Video Names
 // ==========================================
 const MEETING_STYLES = `
   :root {
@@ -412,7 +492,6 @@ const MEETING_STYLES = `
     --surface: #1a1a1a;
     --surface-dark: #111;
     --border: #333;
-    --border-soft: rgba(255, 255, 255, 0.1);
     --accent: #e63946;
     --accent-hover: #c1121f;
     --accent-light: rgba(230, 57, 70, 0.2);
@@ -451,17 +530,17 @@ const MEETING_STYLES = `
   }
   .lobby-card {
     background: var(--surface);
-    padding: 2.75rem 2.5rem;
+    padding: 2.5rem;
     border-radius: 18px;
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
     border: 1px solid var(--border);
     width: 100%;
-    max-width: 470px;
+    max-width: 460px;
     text-align: center;
   }
   .lobby-logo {
-    width: 56px;
-    height: 56px;
+    width: 54px;
+    height: 54px;
     border-radius: 14px;
     background: var(--accent-light);
     border: 1px solid rgba(230, 57, 70, 0.35);
@@ -471,18 +550,18 @@ const MEETING_STYLES = `
     color: var(--accent);
     margin-bottom: 1rem;
   }
-  .lobby-title { font-size: 1.9rem; color: #fff; margin-bottom: 0.45rem; font-weight: 800; }
-  .lobby-sub { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 1.35rem; }
+  .lobby-title { font-size: 1.85rem; color: #fff; margin-bottom: 0.45rem; font-weight: 800; }
+  .lobby-sub { color: var(--text-muted); font-size: 0.96rem; margin-bottom: 1.25rem; }
   .lobby-status {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.35rem;
     padding: 7px 14px;
     border-radius: 999px;
     background: var(--surface-dark);
     border: 1px solid var(--border);
-    font-size: 0.83rem;
+    font-size: 0.82rem;
     font-weight: 600;
   }
   .lobby-status.ok { border-color: rgba(46, 204, 113, 0.4); color: var(--green); }
@@ -493,19 +572,19 @@ const MEETING_STYLES = `
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.35rem;
   }
   .lobby-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 11px;
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--bg-light);
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -517,12 +596,12 @@ const MEETING_STYLES = `
     color: var(--accent);
   }
 
-  .form-group { text-align: left; margin-bottom: 1.65rem; }
-  .form-group label { display: block; margin-bottom: 8px; color: #fff; font-size: 0.95rem; font-weight: 600; }
-  .form-hint { display: block; font-size: 0.8rem; color: var(--text-muted); font-weight: 400; margin-top: 3px; }
+  .form-group { text-align: left; margin-bottom: 1.55rem; }
+  .form-group label { display: block; margin-bottom: 8px; color: #fff; font-size: 0.94rem; font-weight: 600; }
+  .form-hint { display: block; font-size: 0.79rem; color: var(--text-muted); font-weight: 400; margin-top: 3px; }
   .lobby-select {
     width: 100%;
-    padding: 13px 16px;
+    padding: 13px 15px;
     background: var(--bg-light);
     border: 2px solid var(--border);
     border-radius: 10px;
@@ -535,7 +614,7 @@ const MEETING_STYLES = `
   .lobby-select:focus { border-color: var(--accent); }
   .btn-join {
     width: 100%;
-    padding: 15px;
+    padding: 14px;
     background: var(--accent);
     color: #fff;
     border: none;
@@ -552,14 +631,13 @@ const MEETING_STYLES = `
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.7rem 1.5rem;
+    padding: 0.65rem 1.5rem;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     z-index: 30;
     flex-wrap: wrap;
     gap: 10px;
   }
-  .topbar-left { display: flex; align-items: center; gap: 14px; }
   .logo {
     display: flex;
     align-items: center;
@@ -594,7 +672,7 @@ const MEETING_STYLES = `
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     padding: 3px 9px;
     border-radius: 999px;
     font-weight: 700;
@@ -610,7 +688,7 @@ const MEETING_STYLES = `
     color: var(--accent);
     padding: 6px 13px;
     border-radius: 999px;
-    font-size: 0.86rem;
+    font-size: 0.85rem;
     border: 1px solid rgba(230, 57, 70, 0.35);
     font-weight: 700;
     cursor: pointer;
@@ -618,24 +696,30 @@ const MEETING_STYLES = `
   }
   .room-code:hover { background: rgba(230, 57, 70, 0.3); }
 
-  /* --- Main Video Area --- */
+  /* --- Video Stage & Below-Video Compact Name Bar --- */
   .meet-body { flex: 1; display: flex; min-height: 0; position: relative; }
   .video-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #000; }
   .video-grid {
     flex: 1;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 1rem;
-    padding: 1rem 1rem 5.5rem;
+    gap: 1.1rem;
+    padding: 1rem 1.25rem 5.4rem;
     overflow-y: auto;
     align-content: center;
   }
-  .video-grid.single-tile { max-width: 960px; width: 100%; margin: 0 auto; }
+  .video-grid.single-tile { max-width: 940px; width: 100%; margin: 0 auto; }
 
+  .video-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
   .video-tile {
     position: relative;
     background: var(--surface);
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
     aspect-ratio: 16 / 9;
@@ -659,12 +743,12 @@ const MEETING_STYLES = `
     justify-content: center;
   }
   .avatar-circle {
-    width: 72px;
-    height: 72px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
     background: var(--accent);
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 800;
     display: flex;
     align-items: center;
@@ -672,96 +756,115 @@ const MEETING_STYLES = `
     box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
   }
 
-  .v-label {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(6px);
-    color: #fff;
-    padding: 4px 11px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-  }
-  .v-muted {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--accent);
-    color: #fff;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+  /* Compact name bar directly below each video (zero obstruction on video) */
+  .video-name-below {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border: 2px solid #fff;
+    justify-content: space-between;
+    padding: 0 4px;
+    gap: 8px;
+    min-height: 20px;
+  }
+  .video-name-text {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #d4d4d8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .video-name-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .video-lang-mini {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+  .video-muted-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--accent);
   }
 
   /* --- Dual-Language Subtitle Box (Shows BOTH Spoken & Translated) --- */
   .dual-caption-wrap {
     position: absolute;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
     display: flex;
     justify-content: center;
     pointer-events: none;
     z-index: 8;
   }
   .dual-caption-card {
-    background: rgba(11, 25, 44, 0.9);
+    background: rgba(11, 25, 44, 0.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 183, 3, 0.35);
-    border-radius: 12px;
-    padding: 9px 14px;
-    max-width: 96%;
-    min-width: 240px;
+    border: 1px solid rgba(255, 183, 3, 0.38);
+    border-radius: 10px;
+    padding: 8px 13px;
+    max-width: 97%;
+    min-width: 220px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
     text-align: left;
   }
   .caption-row {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    line-height: 1.38;
+    line-height: 1.36;
     word-break: break-word;
   }
   .caption-row.original {
     color: #e5e5e5;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 500;
-    padding-bottom: 5px;
+    padding-bottom: 4px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   }
   .caption-row.original.solo { border-bottom: none; padding-bottom: 0; }
   .caption-row.translated {
     color: var(--amber);
-    font-size: 1.05rem;
+    font-size: 1.04rem;
     font-weight: 800;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
   .caption-row.translated.pending {
     color: var(--text-muted);
-    font-size: 0.86rem;
+    font-size: 0.84rem;
     font-style: italic;
     font-weight: 500;
     text-shadow: none;
   }
+  .caption-row.translated.failed {
+    color: #fca5a5;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-shadow: none;
+  }
   .lang-tag {
     flex-shrink: 0;
-    font-size: 0.66rem;
+    font-size: 0.65rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    padding: 2px 7px;
-    border-radius: 5px;
+    padding: 2px 6px;
+    border-radius: 4px;
   }
   .lang-tag.src { background: rgba(255, 255, 255, 0.14); color: #fff; }
   .lang-tag.tgt { background: rgba(255, 183, 3, 0.22); color: var(--amber); }
@@ -769,7 +872,7 @@ const MEETING_STYLES = `
   /* --- Floating Toolbar Dock --- */
   .meet-dock-wrap {
     position: absolute;
-    bottom: 16px;
+    bottom: 14px;
     left: 0;
     right: 0;
     display: flex;
@@ -782,8 +885,8 @@ const MEETING_STYLES = `
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
-    padding: 9px 18px;
+    gap: 11px;
+    padding: 8px 16px;
     background: rgba(26, 26, 26, 0.92);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
@@ -791,8 +894,8 @@ const MEETING_STYLES = `
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
   }
   .tb-btn {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
     background: #333;
     color: #fff;
     border: 2px solid transparent;
@@ -816,7 +919,7 @@ const MEETING_STYLES = `
     border-color: var(--accent);
   }
   .tb-btn.end {
-    width: 56px;
+    width: 54px;
     border-radius: 999px;
     background: var(--accent);
     color: #fff;
@@ -834,7 +937,7 @@ const MEETING_STYLES = `
 
   /* --- Side Panel (Transcript & Chat) --- */
   .side-panel {
-    width: 370px;
+    width: 360px;
     background: var(--surface-dark);
     border-left: 1px solid var(--border);
     display: flex;
@@ -853,12 +956,12 @@ const MEETING_STYLES = `
     background: var(--surface);
   }
   .panel-tab {
-    padding: 9px 10px;
+    padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid transparent;
     background: transparent;
     color: var(--text-muted);
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
@@ -874,12 +977,12 @@ const MEETING_STYLES = `
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.8rem;
     background: var(--surface);
   }
   .empty-state {
     color: #888;
-    font-size: 0.86rem;
+    font-size: 0.85rem;
     text-align: center;
     margin-top: 2rem;
     line-height: 1.5;
@@ -895,15 +998,15 @@ const MEETING_STYLES = `
     justify-content: space-between;
     align-items: center;
     margin-bottom: 5px;
-    font-size: 0.8rem;
+    font-size: 0.79rem;
   }
   .cm-name { font-weight: 700; color: var(--amber); }
-  .cm-time { color: #888; font-size: 0.74rem; }
-  .chat-body { color: #fff; font-size: 0.92rem; line-height: 1.45; }
+  .cm-time { color: #888; font-size: 0.72rem; }
+  .chat-body { color: #fff; font-size: 0.91rem; line-height: 1.45; }
 
   .transcript-orig {
     color: #ddd;
-    font-size: 0.86rem;
+    font-size: 0.84rem;
     display: flex;
     gap: 6px;
     align-items: baseline;
@@ -912,7 +1015,7 @@ const MEETING_STYLES = `
   }
   .transcript-trans {
     color: var(--amber);
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     font-weight: 700;
     display: flex;
     gap: 6px;
@@ -921,7 +1024,7 @@ const MEETING_STYLES = `
   }
 
   .chat-input-row {
-    padding: 0.9rem;
+    padding: 0.85rem;
     border-top: 1px solid var(--border);
     display: flex;
     gap: 8px;
@@ -929,7 +1032,7 @@ const MEETING_STYLES = `
   }
   .chat-input-row input {
     flex: 1;
-    padding: 11px 14px;
+    padding: 10px 13px;
     border: 1px solid #444;
     border-radius: 8px;
     background: #222;
@@ -938,7 +1041,7 @@ const MEETING_STYLES = `
   }
   .chat-input-row input:focus { border-color: var(--accent); }
   .chat-input-row button {
-    padding: 0 18px;
+    padding: 0 16px;
     background: var(--accent);
     color: #fff;
     border: none;
@@ -950,10 +1053,10 @@ const MEETING_STYLES = `
 
   @media (max-width: 900px) {
     .meet-body { flex-direction: column; }
-    .video-grid { grid-template-columns: 1fr; padding: 0.85rem 0.85rem 5.4rem; }
+    .video-grid { grid-template-columns: 1fr; padding: 0.8rem 0.8rem 5.2rem; }
     .side-panel { width: 100%; height: 40vh; border-left: none; border-top: 1px solid var(--border); }
     .side-panel.hidden { height: 0; width: 100%; }
-    .meet-topbar { padding: 0.65rem 1rem; }
+    .meet-topbar { padding: 0.6rem 1rem; }
   }
 `;
 
@@ -996,7 +1099,6 @@ function Meeting() {
   const panelOpenRef = useRef(panelOpen);
   const panelTabRef = useRef(panelTab);
 
-  // Per-speaker translation coordination (interim never aborts final sentences!)
   const latestFinalSeqRef = useRef({});
   const latestInterimSeqRef = useRef({});
   const interimAbortRef = useRef({});
@@ -1028,7 +1130,6 @@ function Meeting() {
 
   const appendTranscript = useCallback((entry) => {
     setTranscriptHistory((prev) => {
-      // Avoid accidental duplicate adjacent transcript entries
       const last = prev[prev.length - 1];
       if (
         last &&
@@ -1044,7 +1145,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // Incoming Subtitle Translator (Never Drops Long or Follow-Up Sentences)
+  // Incoming Subtitle Translator (EN / NE / HI)
   // ==========================================
   const handleIncomingSubtitle = useCallback(
     async (socketId, text, sourceLang, isInterim, senderName) => {
@@ -1052,38 +1153,39 @@ function Meeting() {
       if (!cleanText) return;
 
       const targetLang = myLanguageRef.current;
-      const srcBase = resolveSourceParam(cleanText, sourceLang);
+      const effectiveSrc = detectEffectiveSource(cleanText, sourceLang, targetLang);
       const tgtBase = getBaseLang(targetLang);
       const speaker =
         senderName ||
         peersRef.current.find((p) => p.peerId === socketId)?.name ||
         "Participant";
 
-      const sameLanguage = srcBase !== "auto" && srcBase === tgtBase;
+      const sameLanguage = effectiveSrc !== "auto" && effectiveSrc === tgtBase;
 
-      // 1. Same language: instant display, zero API calls
+      // 1. Same language -> display directly without calling API
       if (sameLanguage) {
         updatePeerSubtitle(socketId, {
           original: cleanText,
           translated: cleanText,
-          sourceLang: sourceLang || targetLang,
+          sourceLang: effectiveSrc,
           targetLang,
           isLive: isInterim,
           isTranslating: false,
+          failed: false,
         });
         if (!isInterim) {
           appendTranscript({
             speaker,
             original: cleanText,
             translated: cleanText,
-            sourceLang: sourceLang || targetLang,
+            sourceLang: effectiveSrc,
             targetLang,
           });
         }
         return;
       }
 
-      // 2. Interim caption: display original text immediately, translate after 800ms pause
+      // 2. Interim live speech -> show original immediately, translate on 750ms pause
       if (isInterim) {
         const interimSeq = (latestInterimSeqRef.current[socketId] || 0) + 1;
         latestInterimSeqRef.current[socketId] = interimSeq;
@@ -1099,10 +1201,11 @@ function Meeting() {
             [socketId]: {
               original: cleanText,
               translated: prevSub?.isLive ? prevSub.translated : "",
-              sourceLang: sourceLang || "auto",
+              sourceLang: effectiveSrc,
               targetLang,
               isLive: true,
               isTranslating: true,
+              failed: false,
             },
           };
         });
@@ -1122,22 +1225,23 @@ function Meeting() {
 
             updatePeerSubtitle(socketId, {
               original: cleanText,
-              translated: result.text,
-              sourceLang: sourceLang || result.detectedLang || "auto",
+              translated: result.ok ? result.text : "",
+              sourceLang: result.detectedLang !== "auto" ? result.detectedLang : effectiveSrc,
               targetLang,
               isLive: true,
               isTranslating: false,
+              failed: !result.ok,
             });
           } catch (err) {
             if (err?.name !== "AbortError") {
               console.warn("Interim translation skipped:", err?.message || err);
             }
           }
-        }, 800);
+        }, 750);
         return;
       }
 
-      // 3. Finalized sentence: NEVER aborted by interim updates; translates even very long text via chunks
+      // 3. Finalized sentence -> never aborted by interim updates; full sentence accuracy
       if (interimPauseTimersRef.current[socketId]) {
         clearTimeout(interimPauseTimersRef.current[socketId]);
       }
@@ -1147,45 +1251,43 @@ function Meeting() {
 
       const finalSeq = (latestFinalSeqRef.current[socketId] || 0) + 1;
       latestFinalSeqRef.current[socketId] = finalSeq;
-      // Bump interim seq so any late interim can't overwrite this final
       latestInterimSeqRef.current[socketId] = (latestInterimSeqRef.current[socketId] || 0) + 1;
 
-      // Show original text immediately while translating
       setSubtitles((prev) => ({
         ...prev,
         [socketId]: {
           original: cleanText,
           translated: prev[socketId]?.original === cleanText ? prev[socketId].translated : "",
-          sourceLang: sourceLang || "auto",
+          sourceLang: effectiveSrc,
           targetLang,
           isLive: false,
           isTranslating: true,
+          failed: false,
         },
       }));
 
       try {
         const result = await translateFullText(cleanText, sourceLang, targetLang);
         const resolvedSource =
-          sourceLang || (result.detectedLang && result.detectedLang !== "auto" ? result.detectedLang : "auto");
+          result.detectedLang && result.detectedLang !== "auto" ? result.detectedLang : effectiveSrc;
 
-        // Always record finalized sentences in the bilingual transcript
         appendTranscript({
           speaker,
           original: cleanText,
-          translated: result.text,
+          translated: result.ok ? result.text : "",
           sourceLang: resolvedSource,
           targetLang,
         });
 
-        // Update on-screen caption only if this is still the newest finalized sentence
         if (latestFinalSeqRef.current[socketId] === finalSeq) {
           updatePeerSubtitle(socketId, {
             original: cleanText,
-            translated: result.text,
+            translated: result.ok ? result.text : "",
             sourceLang: resolvedSource,
             targetLang,
             isLive: false,
             isTranslating: false,
+            failed: !result.ok,
           });
         }
       } catch (err) {
@@ -1193,11 +1295,12 @@ function Meeting() {
         if (latestFinalSeqRef.current[socketId] === finalSeq) {
           updatePeerSubtitle(socketId, {
             original: cleanText,
-            translated: cleanText,
-            sourceLang: sourceLang || "auto",
+            translated: "",
+            sourceLang: effectiveSrc,
             targetLang,
             isLive: false,
             isTranslating: false,
+            failed: true,
           });
         }
       }
@@ -1209,6 +1312,11 @@ function Meeting() {
   useEffect(() => {
     handleIncomingRef.current = handleIncomingSubtitle;
   }, [handleIncomingSubtitle]);
+
+  const handleLanguageChange = (nextLang) => {
+    myLanguageRef.current = nextLang;
+    setMyLanguage(nextLang);
+  };
 
   // ==========================================
   // 0. Pre-warm Render Backend in Lobby
@@ -1222,7 +1330,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // 1. Self-Healing Speech Recognition (Fixes Long-Sentence Cutoff & Stalling)
+  // 1. Self-Healing Speech Recognition (Never Drops Long or Subsequent Sentences)
   // ==========================================
   useEffect(() => {
     if (!hasJoined || muted) {
@@ -1254,7 +1362,6 @@ function Meeting() {
       const clean = (rawText || "").replace(/\s+/g, " ").trim();
       if (!clean || !socketRef.current) return;
 
-      // Deduplicate identical final emitted within 2.5s (e.g., pause-flush followed by Chrome isFinal)
       const now = Date.now();
       if (clean.toLowerCase() === lastEmittedFinal.toLowerCase() && now - lastEmittedFinalAt < 2500) {
         return;
@@ -1290,6 +1397,7 @@ function Meeting() {
       setMicState("restarting");
 
       restartTimer = setTimeout(() => {
+        restartTimer = null;
         if (!isDisposed && !fatalPermissionError && !mutedRef.current) {
           startFreshRecognition();
         }
@@ -1299,7 +1407,6 @@ function Meeting() {
     const startFreshRecognition = () => {
       if (isDisposed || fatalPermissionError || mutedRef.current) return;
 
-      // Cleanly tear down any previous wedged instance before creating a fresh one
       if (recognition) {
         recognition.onstart = null;
         recognition.onresult = null;
@@ -1353,14 +1460,12 @@ function Meeting() {
             });
           }
 
-          // If Chrome delays isFinal on a long sentence, flush automatically after a 1.1s pause
           if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
           pauseFlushTimer = setTimeout(() => {
             if (unfinalizedInterim) {
               const toFlush = unfinalizedInterim;
               emitFinalSentence(toFlush);
-              // For very long utterances (>180 chars), cycle recognition cleanly so Chrome's buffer stays fresh
-              if (toFlush.length > 180) {
+              if (toFlush.length > 220) {
                 try { rec.stop(); } catch {}
               }
             }
@@ -1382,7 +1487,6 @@ function Meeting() {
           console.error("Speech recognition permission denied:", event.error);
           return;
         }
-        // On network/audio-capture glitches, recover cleanly after a short delay
         if (event.error === "network" || event.error === "audio-capture") {
           isListening = false;
           scheduleRestart(1000);
@@ -1393,8 +1497,6 @@ function Meeting() {
         isListening = false;
         if (isDisposed) return;
 
-        // CRITICAL FIX: Chrome often cuts off long sentences via onend WITHOUT emitting isFinal.
-        // Flush any unfinalized long sentence here so it NEVER gets lost!
         if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
         if (unfinalizedInterim) {
           emitFinalSentence(unfinalizedInterim);
@@ -1409,14 +1511,12 @@ function Meeting() {
       try {
         rec.start();
       } catch {
-        // Retry instead of dying permanently on InvalidStateError
         scheduleRestart(650);
       }
     };
 
     startFreshRecognition();
 
-    // Watchdog: guarantees speech recognition never stays permanently dead after a long utterance
     watchdogTimer = setInterval(() => {
       if (!isDisposed && !fatalPermissionError && !mutedRef.current && !isListening && !restartTimer) {
         startFreshRecognition();
@@ -1751,7 +1851,7 @@ function Meeting() {
               <span className="status-dot" />
               {serverStatus === "waking"
                 ? "Waking Server..."
-                : "Server Ready • Live Dual-Language Translation"}
+                : "Server Ready • English / Nepali / Hindi Live Translation"}
             </div>
 
             <div className="lobby-toggles">
@@ -1760,7 +1860,7 @@ function Meeting() {
                 className={`lobby-toggle-btn${muted ? " off" : ""}`}
                 onClick={() => setMuted((m) => !m)}
               >
-                {muted ? <MicOffIcon /> : <MicOnIcon />}
+                {muted ? <MicOffIcon size={18} /> : <MicOnIcon size={18} />}
                 {muted ? "Mic Off" : "Mic On"}
               </button>
               <button
@@ -1780,14 +1880,14 @@ function Meeting() {
                     <TranslateIcon /> Select your language
                   </span>
                   <span className="form-hint">
-                    Displays both the speaker's original language and live translation in your language.
+                    Shows both what the other person speaks and its accurate translation in your language.
                   </span>
                 </label>
                 <select
                   className="lobby-select"
                   required
                   value={myLanguage}
-                  onChange={(e) => setMyLanguage(e.target.value)}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                 >
                   {SUPPORTED_LANGUAGES.map((l) => (
                     <option key={l.code} value={l.code}>
@@ -1801,10 +1901,10 @@ function Meeting() {
               </button>
             </form>
 
-            <div style={{ marginTop: "20px" }}>
+            <div style={{ marginTop: "18px" }}>
               <Link
                 to="/dashboard"
-                style={{ color: "var(--text-muted)", fontSize: "0.9rem", textDecoration: "none" }}
+                style={{ color: "var(--text-muted)", fontSize: "0.88rem", textDecoration: "none" }}
               >
                 ← Cancel and return to dashboard
               </Link>
@@ -1823,21 +1923,19 @@ function Meeting() {
       <style>{MEETING_STYLES}</style>
 
       <header className="meet-topbar">
-        <div className="topbar-left">
-          <Link to="/dashboard" className="logo">
-            <span className="logo-icon">
-              <CamOnIcon />
-            </span>
-            Chalfal
-          </Link>
-        </div>
+        <Link to="/dashboard" className="logo">
+          <span className="logo-icon">
+            <CamOnIcon />
+          </span>
+          Chalfal
+        </Link>
 
         <div className="lang-control">
           <TranslateIcon />
           <select
             className="lang-select-inline"
             value={myLanguage}
-            onChange={(e) => setMyLanguage(e.target.value)}
+            onChange={(e) => handleLanguageChange(e.target.value)}
             aria-label="Your meeting language"
           >
             {SUPPORTED_LANGUAGES.map((l) => (
@@ -1879,40 +1977,47 @@ function Meeting() {
       <main className="meet-body">
         <section className="video-stage">
           <div className={`video-grid${peers.length === 0 ? " single-tile" : ""}`}>
-            {/* Self Video Tile */}
-            <div
-              className={`video-tile${videoOff && !screenSharing ? " video-off" : ""}${
-                myLiveCaption && !muted ? " speaking" : ""
-              }`}
-            >
-              <video ref={userVideoRef} autoPlay playsInline muted />
-              {videoOff && !screenSharing && (
-                <div className="avatar-fallback">
-                  <div className="avatar-circle">{getInitials(userName)}</div>
-                </div>
-              )}
-              <span className="v-label">
-                {userName} (You) • {getLangName(myLanguage)}
-              </span>
-              {muted && (
-                <span className="v-muted" title="Muted">
-                  <MicOffIcon />
-                </span>
-              )}
+            {/* Self Video Slot */}
+            <div className="video-slot">
+              <div
+                className={`video-tile${videoOff && !screenSharing ? " video-off" : ""}${
+                  myLiveCaption && !muted ? " speaking" : ""
+                }`}
+              >
+                <video ref={userVideoRef} autoPlay playsInline muted />
+                {videoOff && !screenSharing && (
+                  <div className="avatar-fallback">
+                    <div className="avatar-circle">{getInitials(userName)}</div>
+                  </div>
+                )}
 
-              {captionsEnabled && myLiveCaption && !muted && (
-                <div className="dual-caption-wrap">
-                  <div className="dual-caption-card">
-                    <div className="caption-row original solo">
-                      <span className="lang-tag src">{getLangName(myLanguage)}</span>
-                      <span>{myLiveCaption}</span>
+                {captionsEnabled && myLiveCaption && !muted && (
+                  <div className="dual-caption-wrap">
+                    <div className="dual-caption-card">
+                      <div className="caption-row original solo">
+                        <span className="lang-tag src">{getLangName(myLanguage)}</span>
+                        <span>{myLiveCaption}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
+              {/* Compact name line below video */}
+              <div className="video-name-below">
+                <span className="video-name-text">{userName} (You)</span>
+                <span className="video-name-meta">
+                  <span className="video-lang-mini">{getLangName(myLanguage)}</span>
+                  {muted && (
+                    <span className="video-muted-mini" title="Muted">
+                      <MicOffIcon size={13} /> Muted
+                    </span>
+                  )}
+                </span>
+              </div>
             </div>
 
-            {/* Remote Peer Video Tiles */}
+            {/* Remote Peer Video Slots */}
             {peers.map((p) => (
               <PeerVideo
                 key={p.peerId}
@@ -2006,50 +2111,70 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
     }
   }, [peer, stream]);
 
+  const isDifferentLang =
+    subtitle && getBaseLang(subtitle.sourceLang) !== getBaseLang(subtitle.targetLang);
+
   const showTranslationRow =
     subtitle &&
-    (subtitle.isTranslating ||
-      (subtitle.translated &&
-        getBaseLang(subtitle.sourceLang) !== getBaseLang(subtitle.targetLang)));
+    (subtitle.isTranslating || subtitle.failed || (subtitle.translated && isDifferentLang));
 
   return (
-    <div className={`video-tile${videoOff ? " video-off" : ""}${subtitle ? " speaking" : ""}`}>
-      <video ref={ref} autoPlay playsInline />
-      {videoOff && (
-        <div className="avatar-fallback">
-          <div className="avatar-circle">{getInitials(name)}</div>
-        </div>
-      )}
-      <span className="v-label">{name}</span>
-      {muted && (
-        <span className="v-muted" title="Muted">
-          <MicOffIcon />
-        </span>
-      )}
-
-      {subtitle?.original && (
-        <div className="dual-caption-wrap">
-          <div className="dual-caption-card">
-            {/* Row 1: Original Spoken Language */}
-            <div className={`caption-row original${showTranslationRow ? "" : " solo"}`}>
-              <span className="lang-tag src">{getLangName(subtitle.sourceLang)}</span>
-              <span>{subtitle.original}</span>
-            </div>
-
-            {/* Row 2: Translated Text in Your Language */}
-            {showTranslationRow && (
-              <div
-                className={`caption-row translated${
-                  subtitle.isTranslating && !subtitle.translated ? " pending" : ""
-                }`}
-              >
-                <span className="lang-tag tgt">{getLangName(subtitle.targetLang)}</span>
-                <span>{subtitle.translated || "Translating..."}</span>
-              </div>
-            )}
+    <div className="video-slot">
+      <div className={`video-tile${videoOff ? " video-off" : ""}${subtitle ? " speaking" : ""}`}>
+        <video ref={ref} autoPlay playsInline />
+        {videoOff && (
+          <div className="avatar-fallback">
+            <div className="avatar-circle">{getInitials(name)}</div>
           </div>
-        </div>
-      )}
+        )}
+
+        {subtitle?.original && (
+          <div className="dual-caption-wrap">
+            <div className="dual-caption-card">
+              {/* Row 1: Original Spoken Text */}
+              <div className={`caption-row original${showTranslationRow ? "" : " solo"}`}>
+                <span className="lang-tag src">{getLangName(subtitle.sourceLang)}</span>
+                <span>{subtitle.original}</span>
+              </div>
+
+              {/* Row 2: Translated Text */}
+              {showTranslationRow && (
+                <div
+                  className={`caption-row translated${
+                    subtitle.failed
+                      ? " failed"
+                      : subtitle.isTranslating && !subtitle.translated
+                      ? " pending"
+                      : ""
+                  }`}
+                >
+                  <span className="lang-tag tgt">{getLangName(subtitle.targetLang)}</span>
+                  <span>
+                    {subtitle.failed
+                      ? "Translation unavailable right now"
+                      : subtitle.translated || "Translating..."}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Compact name line below video */}
+      <div className="video-name-below">
+        <span className="video-name-text">{name}</span>
+        <span className="video-name-meta">
+          {subtitle?.sourceLang && subtitle.sourceLang !== "auto" && (
+            <span className="video-lang-mini">{getLangName(subtitle.sourceLang)}</span>
+          )}
+          {muted && (
+            <span className="video-muted-mini" title="Muted">
+              <MicOffIcon size={13} /> Muted
+            </span>
+          )}
+        </span>
+      </div>
     </div>
   );
 });
@@ -2099,7 +2224,7 @@ const SidePanel = memo(function SidePanel({
         <div className="panel-list">
           {transcriptHistory.length === 0 && (
             <div className="empty-state">
-              Both spoken sentences and their translations will be logged here live.
+              Spoken sentences and their translations will appear here in real time.
             </div>
           )}
           {transcriptHistory.map((item) => {
