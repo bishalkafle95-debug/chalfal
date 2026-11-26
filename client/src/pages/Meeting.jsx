@@ -106,10 +106,11 @@ const CopyIcon = () => (
 );
 
 // ==========================================
-// Accurate Free Translation Engine (EN / NE / HI)
+// Reliable Free Translation Engine (EN / NE / HI)
 // ==========================================
 const translationCache = new Map();
 const providerCooldown = new Map();
+let lastHttpCallAt = 0;
 
 const getBaseLang = (code) => {
   if (!code || typeof code !== "string") return "auto";
@@ -131,7 +132,9 @@ const getInitials = (name = "G") =>
     .map((p) => p[0]?.toUpperCase() || "")
     .join("") || "G";
 
-// Heuristic distinction between Nepali and Hindi when Devanagari arrives without explicit sourceLang
+const normalizeForCompare = (s = "") =>
+  s.replace(/[.?!।,\s]+/g, " ").trim().toLowerCase();
+
 const NEPALI_MARKERS = /(तपाईं|तिमी|छु|छौ|छन्|छैन|होइन|गर्छु|गर्नु|पनि|कस्तो|के\s|कहाँ|किन|हामी|मेरो|तिम्रो|तपाईंको|लाई|बाट|मा\s)/;
 const HINDI_MARKERS = /(आप|तुम|मैं|है\b|हैं|नहीं|कैसे|क्या|कहाँ|क्यों|हम|मेरा|तुम्हारा|आपका|करता|करती|और|भी|से\s|में\s)/;
 
@@ -146,11 +149,9 @@ function detectEffectiveSource(text, declaredSourceLang, targetLang) {
     const hiHits = (text.match(new RegExp(HINDI_MARKERS, "g")) || []).length;
     if (neHits > hiHits) return "ne";
     if (hiHits > neHits) return "hi";
-    // If listener is Hindi, Devanagari is likely Nepali; otherwise default to auto
     return tgt === "hi" ? "ne" : tgt === "ne" ? "hi" : "auto";
   }
 
-  // Pure Latin script: if speaker declared EN or spoke English words while set to NE/HI
   if (/[a-zA-Z]/.test(text)) {
     return declared === "en" ? "en" : "auto";
   }
@@ -185,7 +186,6 @@ function normalizeSpeechText(text, srcBase) {
   if (!clean) return "";
 
   const hasDevanagari = /[\u0900-\u097F]/.test(clean);
-
   if (!hasDevanagari) {
     for (const [pattern, replacement] of EN_CONTRACTIONS) {
       clean = clean.replace(pattern, replacement);
@@ -202,7 +202,6 @@ function normalizeSpeechText(text, srcBase) {
   return clean;
 }
 
-// Keep full sentences intact up to 350 chars for natural NMT accuracy; split only very long speech
 function splitIntoChunks(text, maxChars = 350) {
   const clean = (text || "").replace(/\s+/g, " ").trim();
   if (clean.length <= maxChars) return [clean];
@@ -216,7 +215,6 @@ function splitIntoChunks(text, maxChars = 350) {
       continue;
     }
 
-    // Try splitting on natural clause boundaries before falling back to word boundaries
     const clauses = sentence.split(/(?<=,|;)\s+|\s+(?=(?:and|but|because|so|or|तर|अनि|किनभने|और|लेकिन|क्योंकि)\s)/i);
     let current = "";
 
@@ -253,45 +251,37 @@ function splitIntoChunks(text, maxChars = 350) {
   return chunks.filter(Boolean);
 }
 
-async function fetchWithTimeout(url, externalSignal, timeoutMs = 5000) {
-  const controller = new AbortController();
-  const onExternalAbort = () => controller.abort();
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  if (externalSignal) {
-    if (externalSignal.aborted) {
-      controller.abort();
-    } else {
-      externalSignal.addEventListener("abort", onExternalAbort, { once: true });
-    }
+async function fetchWithTimeout(url, timeoutMs = 5000) {
+  // Polite 180ms minimum spacing between outbound translation requests to avoid 429 bursts
+  const sinceLast = Date.now() - lastHttpCallAt;
+  if (sinceLast < 180) {
+    await wait(180 - sinceLast);
   }
+  lastHttpCallAt = Date.now();
 
+  const controller = new AbortController();
   const timer = setTimeout(() => controller.abort("timeout"), timeoutMs);
   try {
     return await fetch(url, { signal: controller.signal });
   } finally {
     clearTimeout(timer);
-    if (externalSignal) {
-      externalSignal.removeEventListener("abort", onExternalAbort);
-    }
   }
 }
 
 const isCoolingDown = (key) => (providerCooldown.get(key) || 0) > Date.now();
-const setCooldown = (key, ms = 35000) => providerCooldown.set(key, Date.now() + ms);
+const setCooldown = (key, ms = 15000) => providerCooldown.set(key, Date.now() + ms);
 
-const isSameIgnoringCase = (a = "", b = "") =>
-  a.replace(/[.?!।\s]+/g, " ").trim().toLowerCase() ===
-  b.replace(/[.?!।\s]+/g, " ").trim().toLowerCase();
-
-async function callGoogleGtx(chunk, sl, tl, signal) {
+async function callGoogleGtx(chunk, sl, tl) {
   const url =
     `https://translate.googleapis.com/translate_a/single?client=gtx` +
     `&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}` +
     `&dt=t&q=${encodeURIComponent(chunk)}`;
 
-  const res = await fetchWithTimeout(url, signal, 5000);
+  const res = await fetchWithTimeout(url, 5000);
   if (res.status === 429) {
-    setCooldown("gtx", 30000);
+    setCooldown("gtx", 15000);
     return null;
   }
   if (!res.ok) return null;
@@ -307,15 +297,15 @@ async function callGoogleGtx(chunk, sl, tl, signal) {
   return translated ? { text: translated, detectedLang, ok: true } : null;
 }
 
-async function callGoogleDict(chunk, sl, tl, signal) {
+async function callGoogleDict(chunk, sl, tl) {
   const url =
     `https://translate.googleapis.com/translate_a/single?client=dict-chrome-ex` +
     `&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}` +
     `&dt=t&q=${encodeURIComponent(chunk)}`;
 
-  const res = await fetchWithTimeout(url, signal, 5000);
+  const res = await fetchWithTimeout(url, 5000);
   if (res.status === 429) {
-    setCooldown("dict", 30000);
+    setCooldown("dict", 15000);
     return null;
   }
   if (!res.ok) return null;
@@ -338,7 +328,7 @@ async function callGoogleDict(chunk, sl, tl, signal) {
   return translated ? { text: translated, detectedLang, ok: true } : null;
 }
 
-async function translateSingleChunk(chunk, src, tgt, signal) {
+async function translateSingleChunkHttp(chunk, src, tgt) {
   const cacheKey = `${src}:${tgt}:${chunk.toLowerCase()}`;
   if (translationCache.has(cacheKey)) {
     return translationCache.get(cacheKey);
@@ -352,52 +342,42 @@ async function translateSingleChunk(chunk, src, tgt, signal) {
     return res;
   };
 
-  // 1. Primary: Google Translate GTX (CORS-enabled, highest accuracy for EN / NE / HI)
+  // 1. Primary: Google Translate GTX
   if (!isCoolingDown("gtx")) {
     try {
-      let res = await callGoogleGtx(chunk, src, tgt, signal);
-      // If explicit sl returned exact same text, retry once with sl=auto (handles mixed-language speech)
-      if (res && isSameIgnoringCase(res.text, chunk) && src !== "auto") {
-        const autoRes = await callGoogleGtx(chunk, "auto", tgt, signal);
-        if (autoRes && !isSameIgnoringCase(autoRes.text, chunk)) {
+      let res = await callGoogleGtx(chunk, src, tgt);
+      if (res && normalizeForCompare(res.text) === normalizeForCompare(chunk) && src !== "auto") {
+        const autoRes = await callGoogleGtx(chunk, "auto", tgt);
+        if (autoRes && normalizeForCompare(autoRes.text) !== normalizeForCompare(chunk)) {
           res = autoRes;
         }
       }
       if (res) return saveAndReturn(res);
-    } catch (err) {
-      if (signal?.aborted) throw err;
-    }
+    } catch {}
   }
 
-  // 2. Backup Google endpoint on CORS-enabled translate.googleapis.com
+  // 2. Backup Google client on translate.googleapis.com
   if (!isCoolingDown("dict")) {
     try {
-      const res = await callGoogleDict(chunk, src, tgt, signal);
+      const res = await callGoogleDict(chunk, src, tgt);
       if (res) return saveAndReturn(res);
-    } catch (err) {
-      if (signal?.aborted) throw err;
-    }
+    } catch {}
   }
 
-  // 3. Fallback: MyMemory API (CORS-enabled, requires explicit 2-letter source code)
+  // 3. Fallback: MyMemory API
   if (!isCoolingDown("mymemory")) {
     try {
       let mmSrc = src;
       if (mmSrc === "auto") {
-        if (/[\u0900-\u097F]/.test(chunk)) {
-          mmSrc = tgt === "hi" ? "ne" : "hi";
-        } else {
-          mmSrc = "en";
-        }
+        mmSrc = /[\u0900-\u097F]/.test(chunk) ? (tgt === "hi" ? "ne" : "hi") : "en";
       }
-
       if (mmSrc !== tgt) {
         const url =
           `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}` +
           `&langpair=${encodeURIComponent(`${mmSrc}|${tgt}`)}`;
-        const res = await fetchWithTimeout(url, signal, 5000);
+        const res = await fetchWithTimeout(url, 5000);
         if (res.status === 429) {
-          setCooldown("mymemory", 60000);
+          setCooldown("mymemory", 30000);
         } else if (res.ok) {
           const data = await res.json();
           const translated = (data?.responseData?.translatedText || "").trim();
@@ -407,17 +387,15 @@ async function translateSingleChunk(chunk, src, tgt, signal) {
           }
         }
       }
-    } catch (err) {
-      if (signal?.aborted) throw err;
-    }
+    } catch {}
   }
 
-  // 4. Last resort: Lingva Translate proxy
+  // 4. Last resort: Lingva proxy
   if (!isCoolingDown("lingva")) {
     try {
       const pathSafe = chunk.replace(/\//g, " ");
       const url = `https://lingva.ml/api/v1/${encodeURIComponent(src)}/${encodeURIComponent(tgt)}/${encodeURIComponent(pathSafe)}`;
-      const res = await fetchWithTimeout(url, signal, 4000);
+      const res = await fetchWithTimeout(url, 4000);
       if (res.ok) {
         const data = await res.json();
         const translated = (data?.translation || "").trim();
@@ -425,62 +403,14 @@ async function translateSingleChunk(chunk, src, tgt, signal) {
           return saveAndReturn({ text: translated, detectedLang: src, ok: true });
         }
       } else {
-        setCooldown("lingva", 60000);
+        setCooldown("lingva", 45000);
       }
-    } catch (err) {
-      if (signal?.aborted) throw err;
-      setCooldown("lingva", 60000);
+    } catch {
+      setCooldown("lingva", 45000);
     }
   }
 
-  // IMPORTANT: Never cache a failed translation!
   return { text: "", detectedLang: src, ok: false };
-}
-
-async function translateFullText(text, declaredSourceLang, targetLang, signal) {
-  const raw = (text || "").replace(/\s+/g, " ").trim();
-  const tgt = getBaseLang(targetLang);
-  if (!raw || tgt === "auto") {
-    return { text: raw, detectedLang: getBaseLang(declaredSourceLang), ok: true };
-  }
-
-  const src = detectEffectiveSource(raw, declaredSourceLang, targetLang);
-  if (src !== "auto" && src === tgt) {
-    return { text: raw, detectedLang: src, ok: true };
-  }
-
-  const prepared = normalizeSpeechText(raw, src);
-  const fullCacheKey = `FULL:${src}:${tgt}:${prepared.toLowerCase()}`;
-  if (translationCache.has(fullCacheKey)) {
-    return translationCache.get(fullCacheKey);
-  }
-
-  const chunks = splitIntoChunks(prepared, 350);
-  const chunkResults = await Promise.all(
-    chunks.map((c) => translateSingleChunk(c, src, tgt, signal))
-  );
-
-  const anySucceeded = chunkResults.some((r) => r.ok && r.text);
-  const allSucceeded = chunkResults.every((r) => r.ok && r.text);
-  const combinedText = chunkResults
-    .map((r, i) => (r.ok && r.text ? r.text : chunks[i]))
-    .join(" ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const detectedLang = chunkResults.find((r) => r.detectedLang && r.detectedLang !== "auto")?.detectedLang || src;
-  const result = {
-    text: anySucceeded ? combinedText : "",
-    detectedLang,
-    ok: anySucceeded,
-  };
-
-  if (allSucceeded) {
-    if (translationCache.size > 1200) translationCache.clear();
-    translationCache.set(fullCacheKey, result);
-  }
-
-  return result;
 }
 
 // ==========================================
@@ -696,7 +626,7 @@ const MEETING_STYLES = `
   }
   .room-code:hover { background: rgba(230, 57, 70, 0.3); }
 
-  /* --- Video Stage & Below-Video Compact Name Bar --- */
+  /* --- Video Stage & Compact Name Below Every Video --- */
   .meet-body { flex: 1; display: flex; min-height: 0; position: relative; }
   .video-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #000; }
   .video-grid {
@@ -756,7 +686,6 @@ const MEETING_STYLES = `
     box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
   }
 
-  /* Compact name bar directly below each video (zero obstruction on video) */
   .video-name-below {
     display: flex;
     align-items: center;
@@ -1092,6 +1021,7 @@ function Meeting() {
   const streamRef = useRef(null);
   const screenStreamRef = useRef(null);
   const peersRef = useRef([]);
+  const nativeTranslatorsRef = useRef(new Map()); // Tier 0 Chrome/Edge on-device translators
 
   const myLanguageRef = useRef(myLanguage);
   const mutedRef = useRef(muted);
@@ -1100,9 +1030,6 @@ function Meeting() {
   const panelTabRef = useRef(panelTab);
 
   const latestFinalSeqRef = useRef({});
-  const latestInterimSeqRef = useRef({});
-  const interimAbortRef = useRef({});
-  const interimPauseTimersRef = useRef({});
   const subtitleTimersRef = useRef({});
   const selfCaptionTimerRef = useRef(null);
 
@@ -1113,6 +1040,144 @@ function Meeting() {
   useEffect(() => { panelTabRef.current = panelTab; }, [panelTab]);
 
   const userName = user?.fullName || "Guest";
+
+  // Pre-warm Chrome/Edge built-in on-device translator on user click (zero rate limits for EN <-> HI)
+  const warmupNativeTranslators = useCallback((targetLangCode) => {
+    if (typeof window === "undefined" || !("Translator" in window)) return;
+    const tgt = getBaseLang(targetLangCode);
+    if (tgt === "auto") return;
+
+    SUPPORTED_LANGUAGES.forEach(({ code }) => {
+      const src = getBaseLang(code);
+      if (src === tgt || src === "auto") return;
+      const key = `${src}->${tgt}`;
+      if (nativeTranslatorsRef.current.has(key)) return;
+
+      try {
+        const pending = window.Translator.create({
+          sourceLanguage: src,
+          targetLanguage: tgt,
+        })
+          .then((instance) => {
+            nativeTranslatorsRef.current.set(key, instance);
+            return instance;
+          })
+          .catch(() => {
+            nativeTranslatorsRef.current.set(key, false);
+            return null;
+          });
+        nativeTranslatorsRef.current.set(key, pending);
+      } catch {
+        nativeTranslatorsRef.current.set(key, false);
+      }
+    });
+  }, []);
+
+  const tryNativeTranslate = useCallback(async (preparedText, src, tgt) => {
+    if (typeof window === "undefined" || !("Translator" in window)) return null;
+    if (src === "auto" || tgt === "auto" || src === tgt) return null;
+
+    const key = `${src}->${tgt}`;
+    const cached = nativeTranslatorsRef.current.get(key);
+    if (cached === false) return null;
+
+    try {
+      let instance = cached;
+      if (instance && typeof instance.then === "function") {
+        instance = await instance;
+      }
+      if (!instance) {
+        const availability = await window.Translator.availability({
+          sourceLanguage: src,
+          targetLanguage: tgt,
+        });
+        if (availability !== "available") return null;
+        instance = await window.Translator.create({
+          sourceLanguage: src,
+          targetLanguage: tgt,
+        });
+        nativeTranslatorsRef.current.set(key, instance);
+      }
+
+      const translated = (await instance.translate(preparedText)).trim();
+      return translated ? { text: translated, detectedLang: src, ok: true } : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const translateTextReliably = useCallback(
+    async (text, declaredSourceLang, targetLang) => {
+      const raw = (text || "").replace(/\s+/g, " ").trim();
+      const tgt = getBaseLang(targetLang);
+      if (!raw || tgt === "auto") {
+        return { text: raw, detectedLang: getBaseLang(declaredSourceLang), ok: true };
+      }
+
+      const src = detectEffectiveSource(raw, declaredSourceLang, targetLang);
+      if (src !== "auto" && src === tgt) {
+        return { text: raw, detectedLang: src, ok: true };
+      }
+
+      const prepared = normalizeSpeechText(raw, src);
+      const fullCacheKey = `FULL:${src}:${tgt}:${prepared.toLowerCase()}`;
+      if (translationCache.has(fullCacheKey)) {
+        return translationCache.get(fullCacheKey);
+      }
+
+      // Tier 0: Unlimited on-device browser translator (e.g., EN <-> HI on Chrome Desktop)
+      const nativeRes = await tryNativeTranslate(prepared, src, tgt);
+      if (nativeRes?.ok) {
+        if (translationCache.size > 1200) translationCache.clear();
+        translationCache.set(fullCacheKey, nativeRes);
+        return nativeRes;
+      }
+
+      // Tiers 1–4: Chunked HTTP translation (Google GTX -> Google dict -> MyMemory -> Lingva)
+      const chunks = splitIntoChunks(prepared, 350);
+      const runChunks = async () => {
+        const results = [];
+        // Sequential per chunk avoids burst 429s on long multi-chunk sentences
+        for (const chunk of chunks) {
+          results.push(await translateSingleChunkHttp(chunk, src, tgt));
+        }
+        return results;
+      };
+
+      let chunkResults = await runChunks();
+
+      // If all providers temporarily rate-limited, wait 1.4s and retry once cleanly
+      if (!chunkResults.some((r) => r.ok && r.text)) {
+        await wait(1400);
+        providerCooldown.clear();
+        chunkResults = await runChunks();
+      }
+
+      const anySucceeded = chunkResults.some((r) => r.ok && r.text);
+      const allSucceeded = chunkResults.every((r) => r.ok && r.text);
+      const combinedText = chunkResults
+        .map((r, i) => (r.ok && r.text ? r.text : chunks[i]))
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      const detectedLang =
+        chunkResults.find((r) => r.detectedLang && r.detectedLang !== "auto")?.detectedLang || src;
+      const finalRes = {
+        text: anySucceeded ? combinedText : "",
+        detectedLang,
+        ok: anySucceeded,
+      };
+
+      if (allSucceeded) {
+        if (translationCache.size > 1200) translationCache.clear();
+        translationCache.set(fullCacheKey, finalRes);
+      }
+
+      return finalRes;
+    },
+    [tryNativeTranslate]
+  );
 
   const updatePeerSubtitle = useCallback((socketId, payload) => {
     setSubtitles((prev) => ({
@@ -1125,7 +1190,7 @@ function Meeting() {
     }
     subtitleTimersRef.current[socketId] = setTimeout(() => {
       setSubtitles((prev) => ({ ...prev, [socketId]: null }));
-    }, payload.isLive ? 6000 : 9000);
+    }, payload.isLive ? 6000 : 9500);
   }, []);
 
   const appendTranscript = useCallback((entry) => {
@@ -1134,8 +1199,8 @@ function Meeting() {
       if (
         last &&
         last.speaker === entry.speaker &&
-        last.original.toLowerCase() === entry.original.toLowerCase() &&
-        Date.now() - last.time < 3000
+        normalizeForCompare(last.original) === normalizeForCompare(entry.original) &&
+        Date.now() - last.time < 4000
       ) {
         return prev;
       }
@@ -1145,7 +1210,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // Incoming Subtitle Translator (EN / NE / HI)
+  // Incoming Subtitle Handler (0 API calls for interim, 1 accurate call per final sentence)
   // ==========================================
   const handleIncomingSubtitle = useCallback(
     async (socketId, text, sourceLang, isInterim, senderName) => {
@@ -1162,7 +1227,7 @@ function Meeting() {
 
       const sameLanguage = effectiveSrc !== "auto" && effectiveSrc === tgtBase;
 
-      // 1. Same language -> display directly without calling API
+      // 1. Same language -> instant display, zero API calls
       if (sameLanguage) {
         updatePeerSubtitle(socketId, {
           original: cleanText,
@@ -1185,89 +1250,37 @@ function Meeting() {
         return;
       }
 
-      // 2. Interim live speech -> show original immediately, translate on 750ms pause
+      // 2. Interim caption -> display live spoken words immediately with ZERO HTTP requests
+      //    (prevents hitting rate limits after 1 minute!)
       if (isInterim) {
-        const interimSeq = (latestInterimSeqRef.current[socketId] || 0) + 1;
-        latestInterimSeqRef.current[socketId] = interimSeq;
-
-        if (interimPauseTimersRef.current[socketId]) {
-          clearTimeout(interimPauseTimersRef.current[socketId]);
-        }
-
-        setSubtitles((prev) => {
-          const prevSub = prev[socketId];
-          return {
-            ...prev,
-            [socketId]: {
-              original: cleanText,
-              translated: prevSub?.isLive ? prevSub.translated : "",
-              sourceLang: effectiveSrc,
-              targetLang,
-              isLive: true,
-              isTranslating: true,
-              failed: false,
-            },
-          };
+        updatePeerSubtitle(socketId, {
+          original: cleanText,
+          translated: "",
+          sourceLang: effectiveSrc,
+          targetLang,
+          isLive: true,
+          isTranslating: true,
+          failed: false,
         });
-
-        interimPauseTimersRef.current[socketId] = setTimeout(async () => {
-          if (latestInterimSeqRef.current[socketId] !== interimSeq) return;
-
-          if (interimAbortRef.current[socketId]) {
-            interimAbortRef.current[socketId].abort();
-          }
-          const controller = new AbortController();
-          interimAbortRef.current[socketId] = controller;
-
-          try {
-            const result = await translateFullText(cleanText, sourceLang, targetLang, controller.signal);
-            if (latestInterimSeqRef.current[socketId] !== interimSeq) return;
-
-            updatePeerSubtitle(socketId, {
-              original: cleanText,
-              translated: result.ok ? result.text : "",
-              sourceLang: result.detectedLang !== "auto" ? result.detectedLang : effectiveSrc,
-              targetLang,
-              isLive: true,
-              isTranslating: false,
-              failed: !result.ok,
-            });
-          } catch (err) {
-            if (err?.name !== "AbortError") {
-              console.warn("Interim translation skipped:", err?.message || err);
-            }
-          }
-        }, 750);
         return;
       }
 
-      // 3. Finalized sentence -> never aborted by interim updates; full sentence accuracy
-      if (interimPauseTimersRef.current[socketId]) {
-        clearTimeout(interimPauseTimersRef.current[socketId]);
-      }
-      if (interimAbortRef.current[socketId]) {
-        interimAbortRef.current[socketId].abort();
-      }
-
+      // 3. Finalized sentence -> translate once accurately
       const finalSeq = (latestFinalSeqRef.current[socketId] || 0) + 1;
       latestFinalSeqRef.current[socketId] = finalSeq;
-      latestInterimSeqRef.current[socketId] = (latestInterimSeqRef.current[socketId] || 0) + 1;
 
-      setSubtitles((prev) => ({
-        ...prev,
-        [socketId]: {
-          original: cleanText,
-          translated: prev[socketId]?.original === cleanText ? prev[socketId].translated : "",
-          sourceLang: effectiveSrc,
-          targetLang,
-          isLive: false,
-          isTranslating: true,
-          failed: false,
-        },
-      }));
+      updatePeerSubtitle(socketId, {
+        original: cleanText,
+        translated: "",
+        sourceLang: effectiveSrc,
+        targetLang,
+        isLive: false,
+        isTranslating: true,
+        failed: false,
+      });
 
       try {
-        const result = await translateFullText(cleanText, sourceLang, targetLang);
+        const result = await translateTextReliably(cleanText, sourceLang, targetLang);
         const resolvedSource =
           result.detectedLang && result.detectedLang !== "auto" ? result.detectedLang : effectiveSrc;
 
@@ -1290,8 +1303,7 @@ function Meeting() {
             failed: !result.ok,
           });
         }
-      } catch (err) {
-        console.warn("Final translation error:", err?.message || err);
+      } catch {
         if (latestFinalSeqRef.current[socketId] === finalSeq) {
           updatePeerSubtitle(socketId, {
             original: cleanText,
@@ -1305,7 +1317,7 @@ function Meeting() {
         }
       }
     },
-    [appendTranscript, updatePeerSubtitle]
+    [appendTranscript, translateTextReliably, updatePeerSubtitle]
   );
 
   const handleIncomingRef = useRef(handleIncomingSubtitle);
@@ -1316,6 +1328,13 @@ function Meeting() {
   const handleLanguageChange = (nextLang) => {
     myLanguageRef.current = nextLang;
     setMyLanguage(nextLang);
+    warmupNativeTranslators(nextLang);
+  };
+
+  const handleJoinSubmit = (e) => {
+    e.preventDefault();
+    warmupNativeTranslators(myLanguageRef.current);
+    setHasJoined(true);
   };
 
   // ==========================================
@@ -1330,7 +1349,7 @@ function Meeting() {
   }, []);
 
   // ==========================================
-  // 1. Self-Healing Speech Recognition (Never Drops Long or Subsequent Sentences)
+  // 1. Auto-Recycling Speech Recognition (Solves Chrome's ~60s Cutoff Completely)
   // ==========================================
   useEffect(() => {
     if (!hasJoined || muted) {
@@ -1349,6 +1368,8 @@ function Meeting() {
     let isListening = false;
     let fatalPermissionError = false;
     let recognition = null;
+    let sessionStartedAt = 0;
+
     let restartTimer = null;
     let pauseFlushTimer = null;
     let watchdogTimer = null;
@@ -1363,7 +1384,11 @@ function Meeting() {
       if (!clean || !socketRef.current) return;
 
       const now = Date.now();
-      if (clean.toLowerCase() === lastEmittedFinal.toLowerCase() && now - lastEmittedFinalAt < 2500) {
+      // Skip exact duplicate if pause-flush fired right before Chrome's isFinal
+      if (
+        normalizeForCompare(clean) === normalizeForCompare(lastEmittedFinal) &&
+        now - lastEmittedFinalAt < 4000
+      ) {
         return;
       }
 
@@ -1391,6 +1416,19 @@ function Meeting() {
       });
     };
 
+    const detachAndStopCurrent = () => {
+      if (!recognition) return;
+      const oldRec = recognition;
+      recognition = null;
+      oldRec.onstart = null;
+      oldRec.onresult = null;
+      oldRec.onerror = null;
+      oldRec.onend = null;
+      try { oldRec.abort(); } catch {}
+      isListening = false;
+      sessionStartedAt = 0;
+    };
+
     const scheduleRestart = (delayMs = 350) => {
       if (isDisposed || fatalPermissionError || mutedRef.current) return;
       if (restartTimer) clearTimeout(restartTimer);
@@ -1404,15 +1442,23 @@ function Meeting() {
       }, delayMs);
     };
 
+    const recycleSession = (delayMs = 300) => {
+      if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
+      if (unfinalizedInterim) {
+        emitFinalSentence(unfinalizedInterim);
+      }
+      detachAndStopCurrent();
+      scheduleRestart(delayMs);
+    };
+
     const startFreshRecognition = () => {
       if (isDisposed || fatalPermissionError || mutedRef.current) return;
 
+      // Always ensure previous instance is fully detached before creating a new one
       if (recognition) {
-        recognition.onstart = null;
-        recognition.onresult = null;
-        recognition.onerror = null;
-        recognition.onend = null;
-        try { recognition.abort(); } catch {}
+        detachAndStopCurrent();
+        scheduleRestart(300);
+        return;
       }
 
       const rec = new SpeechRecognition();
@@ -1422,13 +1468,14 @@ function Meeting() {
       rec.lang = myLanguage;
 
       rec.onstart = () => {
-        if (isDisposed) return;
+        if (isDisposed || recognition !== rec) return;
         isListening = true;
+        sessionStartedAt = Date.now();
         setMicState("listening");
       };
 
       rec.onresult = (event) => {
-        if (isDisposed || mutedRef.current || !socketRef.current) return;
+        if (isDisposed || recognition !== rec || mutedRef.current || !socketRef.current) return;
 
         let interimTranscript = "";
         let finalTranscript = "";
@@ -1460,16 +1507,13 @@ function Meeting() {
             });
           }
 
+          // Flush automatically after a 1.2s pause so listeners never wait long for translation
           if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
           pauseFlushTimer = setTimeout(() => {
             if (unfinalizedInterim) {
-              const toFlush = unfinalizedInterim;
-              emitFinalSentence(toFlush);
-              if (toFlush.length > 220) {
-                try { rec.stop(); } catch {}
-              }
+              emitFinalSentence(unfinalizedInterim);
             }
-          }, 1100);
+          }, 1200);
         }
 
         if (trimmedFinal) {
@@ -1479,49 +1523,55 @@ function Meeting() {
       };
 
       rec.onerror = (event) => {
-        if (isDisposed) return;
+        if (isDisposed || recognition !== rec) return;
         if (event.error === "not-allowed" || event.error === "service-not-allowed") {
           fatalPermissionError = true;
-          isListening = false;
+          detachAndStopCurrent();
           setMicState("idle");
           console.error("Speech recognition permission denied:", event.error);
           return;
         }
-        if (event.error === "network" || event.error === "audio-capture") {
-          isListening = false;
-          scheduleRestart(1000);
+        // Recover cleanly from network/audio-capture/aborted glitches
+        if (event.error !== "no-speech") {
+          recycleSession(event.error === "network" ? 1000 : 450);
         }
       };
 
       rec.onend = () => {
-        isListening = false;
-        if (isDisposed) return;
-
-        if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
-        if (unfinalizedInterim) {
-          emitFinalSentence(unfinalizedInterim);
-        }
-
-        if (!fatalPermissionError && !mutedRef.current) {
-          scheduleRestart(300);
-        }
+        if (isDisposed || recognition !== rec) return;
+        recycleSession(300);
       };
 
       recognition = rec;
       try {
         rec.start();
       } catch {
+        detachAndStopCurrent();
         scheduleRestart(650);
       }
     };
 
     startFreshRecognition();
 
+    // Proactive 60s-limit guard + dead-session watchdog:
+    // Chrome silently kills SpeechRecognition around 60s, so we recycle cleanly at 42s (when quiet) or 55s max!
     watchdogTimer = setInterval(() => {
-      if (!isDisposed && !fatalPermissionError && !mutedRef.current && !isListening && !restartTimer) {
-        startFreshRecognition();
+      if (isDisposed || fatalPermissionError || mutedRef.current) return;
+
+      if (!isListening && !restartTimer) {
+        recycleSession(300);
+        return;
       }
-    }, 3000);
+
+      if (isListening && sessionStartedAt > 0) {
+        const sessionAge = Date.now() - sessionStartedAt;
+        if (sessionAge >= 42000 && !unfinalizedInterim) {
+          recycleSession(280);
+        } else if (sessionAge >= 55000) {
+          recycleSession(280);
+        }
+      }
+    }, 2000);
 
     return () => {
       isDisposed = true;
@@ -1529,15 +1579,22 @@ function Meeting() {
       if (pauseFlushTimer) clearTimeout(pauseFlushTimer);
       if (watchdogTimer) clearInterval(watchdogTimer);
       if (selfCaptionTimerRef.current) clearTimeout(selfCaptionTimerRef.current);
-      if (recognition) {
-        recognition.onstart = null;
-        recognition.onresult = null;
-        recognition.onerror = null;
-        recognition.onend = null;
-        try { recognition.abort(); } catch {}
-      }
+      detachAndStopCurrent();
     };
   }, [hasJoined, muted, myLanguage, roomCode, userName, appendTranscript]);
+
+  // Clean up native translators on unmount
+  useEffect(() => {
+    const map = nativeTranslatorsRef.current;
+    return () => {
+      map.forEach((val) => {
+        if (val && typeof val.destroy === "function") {
+          try { val.destroy(); } catch {}
+        }
+      });
+      map.clear();
+    };
+  }, []);
 
   // ==========================================
   // 2. Core WebRTC & Socket Connection
@@ -1668,13 +1725,6 @@ function Meeting() {
           peersRef.current = peersRef.current.filter((p) => p.peerId !== socketId);
           setPeers([...peersRef.current]);
 
-          if (interimAbortRef.current[socketId]) {
-            interimAbortRef.current[socketId].abort();
-            delete interimAbortRef.current[socketId];
-          }
-          if (interimPauseTimersRef.current[socketId]) {
-            clearTimeout(interimPauseTimersRef.current[socketId]);
-          }
           if (subtitleTimersRef.current[socketId]) {
             clearTimeout(subtitleTimersRef.current[socketId]);
           }
@@ -1726,9 +1776,6 @@ function Meeting() {
       });
       peersRef.current = [];
       setPeers([]);
-      Object.values(interimAbortRef.current).forEach((c) => c.abort());
-      interimAbortRef.current = {};
-      Object.values(interimPauseTimersRef.current).forEach(clearTimeout);
       Object.values(subtitleTimersRef.current).forEach(clearTimeout);
     };
   }, [hasJoined, roomCode, userName]);
@@ -1873,14 +1920,14 @@ function Meeting() {
               </button>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); setHasJoined(true); }}>
+            <form onSubmit={handleJoinSubmit}>
               <div className="form-group">
                 <label>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
                     <TranslateIcon /> Select your language
                   </span>
                   <span className="form-hint">
-                    Shows both what the other person speaks and its accurate translation in your language.
+                    Shows both what the other person speaks and its live translation in your language.
                   </span>
                 </label>
                 <select
@@ -2003,7 +2050,6 @@ function Meeting() {
                 )}
               </div>
 
-              {/* Compact name line below video */}
               <div className="video-name-below">
                 <span className="video-name-text">{userName} (You)</span>
                 <span className="video-name-meta">
@@ -2131,13 +2177,11 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
         {subtitle?.original && (
           <div className="dual-caption-wrap">
             <div className="dual-caption-card">
-              {/* Row 1: Original Spoken Text */}
               <div className={`caption-row original${showTranslationRow ? "" : " solo"}`}>
                 <span className="lang-tag src">{getLangName(subtitle.sourceLang)}</span>
                 <span>{subtitle.original}</span>
               </div>
 
-              {/* Row 2: Translated Text */}
               {showTranslationRow && (
                 <div
                   className={`caption-row translated${
@@ -2151,8 +2195,9 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
                   <span className="lang-tag tgt">{getLangName(subtitle.targetLang)}</span>
                   <span>
                     {subtitle.failed
-                      ? "Translation unavailable right now"
-                      : subtitle.translated || "Translating..."}
+                      ? "Translation temporarily busy — retrying next sentence"
+                      : subtitle.translated ||
+                        (subtitle.isLive ? "Listening..." : "Translating...")}
                   </span>
                 </div>
               )}
@@ -2161,7 +2206,6 @@ const PeerVideo = memo(function PeerVideo({ peer, stream, name, muted, videoOff,
         )}
       </div>
 
-      {/* Compact name line below video */}
       <div className="video-name-below">
         <span className="video-name-text">{name}</span>
         <span className="video-name-meta">
